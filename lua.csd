@@ -5,9 +5,11 @@ lua_opdef "luatest", {{
 print("#######################################################################")
 print(package.path)
 print(package.cpath)
-print("#######################################################################")
-local ffi = require("ffi")
 local string = require("string")
+print("#######################################################################")
+-- the following line blows up
+local ffi = require("ffi")
+print("ffi is", ffi)
 local csoundLibrary = ffi.load('csound64')
 ffi.cdef[[
     int csoundGetKsmps(void *);
