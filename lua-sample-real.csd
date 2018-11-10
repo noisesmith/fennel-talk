@@ -2,6 +2,10 @@
 
 <CsInstruments>
 lua_opdef "luatest", {{
+print("#######################################################################")
+print(package.path)
+print(package.cpath)
+print("#######################################################################")
 local ffi = require("ffi")
 local string = require("string")
 local csoundLibrary = ffi.load('csound64')
