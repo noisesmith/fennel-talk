@@ -1,0 +1,8 @@
+(local ffi (require :ffi))
+
+(local pks
+  (fn [t]
+    (each [k v (pairs t)]
+      (print k))))
+
+(pks ffi)

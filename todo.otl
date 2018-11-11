@@ -1,0 +1,14 @@
+priorities
+	use fennel with lua
+		figure out how to define a library properly
+		figure out how to do OS system interaction
+	attach fennel to csound, or csound to fennel
+		lua 5.1 can't use the ffi module, so it's going to be csound inside lua
+		create a lua program that loads up csound, initializes the API, etc.
+			do this in pure lua or jump into fennel?
+				jump into fennel!
+	do process based parallelism with *nix specific IPC via sockets
+		figure out how to open and use sockets
+		figure out how to do message or stream encoding on the sockets
+	connect to csound via c api
+
