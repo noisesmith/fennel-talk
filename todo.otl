@@ -13,3 +13,8 @@ priorities
 	connect to csound via c api
 	use lunitx to set up tests
 		: lunit installed
+
+possibilities
+	a command line and result database middleware
+		: store the string of the input, plus some representation of the
+		: result in a db (?) - middleware for readline or nrepl
