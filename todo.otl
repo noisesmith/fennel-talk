@@ -13,6 +13,7 @@ priorities
 	connect to csound via c api
 	use lunitx to set up tests
 		: lunit installed
+		: https://github.com/bakpakin/Fennel/blob/master/test.lua#L213
 
 possibilities
 	a command line and result database middleware
