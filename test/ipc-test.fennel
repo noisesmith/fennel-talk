@@ -1,0 +1,9 @@
+(local lunit (require :lunit))
+
+(local ipc (require :ipc))
+
+(global _ENV (lunit.module :simple :seeall))
+
+(global test1 (fn [] (lunit.assert_true true, "never fails")))
+
+(global test2 (fn [] (lunit.assert_true false, "always fails")))

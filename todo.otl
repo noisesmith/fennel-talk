@@ -11,4 +11,5 @@ priorities
 		figure out how to open and use sockets
 		figure out how to do message or stream encoding on the sockets
 	connect to csound via c api
-
+	use lunitx to set up tests
+		: lunit installed
