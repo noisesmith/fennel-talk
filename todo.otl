@@ -2,12 +2,6 @@ priorities
 	use fennel with lua
 		figure out how to define a library properly
 		figure out how to do OS system interaction
-	attach fennel to csound, or csound to fennel
-		lua 5.1 can't use the ffi module, so it's going to be csound inside lua
-		create a lua program that loads up csound, initializes the API, etc.
-			do this in pure lua or jump into fennel?
-				jump into fennel!
-		attempted reinstalling so that csound would use lua5.2, gave up
 	do process based parallelism with *nix specific IPC via sockets
 		figure out how to open and use sockets
 		figure out how to do message or stream encoding on the sockets
@@ -16,3 +10,19 @@ priorities
 		: luaunit installed via apt
 		copy the sample test
 		: luaunit test works
+
+possibilities
+	a command line and result database middleware
+		: store the string of the input, plus some representation of the
+		: result in a db (?) - middleware for readline or nrepl
+
+defunct / obsolete / speculative
+	use lunitx to set up tests
+		: lunit installed
+		: https://github.com/bakpakin/Fennel/blob/master/test.lua#L213
+	attach fennel to csound, or csound to fennel
+		lua 5.1 can't use the ffi module, so it's going to be csound inside lua
+		create a lua program that loads up csound, initializes the API, etc.
+			: do this in pure lua or jump into fennel?
+			jump into fennel!
+		attempted reinstalling so that csound would use lua5.2, gave up
