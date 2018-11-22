@@ -7,9 +7,12 @@ priorities
 		create a lua program that loads up csound, initializes the API, etc.
 			do this in pure lua or jump into fennel?
 				jump into fennel!
+		attempted reinstalling so that csound would use lua5.2, gave up
 	do process based parallelism with *nix specific IPC via sockets
 		figure out how to open and use sockets
 		figure out how to do message or stream encoding on the sockets
 	connect to csound via c api
-	use lunitx to set up tests
-		: lunit installed
+	use luaunit for tests
+		: luaunit installed via apt
+		copy the sample test
+		: luaunit test works
