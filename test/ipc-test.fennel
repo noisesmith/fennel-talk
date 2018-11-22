@@ -1,9 +1,24 @@
-(local lunit (require :lunit))
+(local lu (require :luaunit))
 
 (local ipc (require :ipc))
 
-(global _ENV (lunit.module :simple :seeall))
+(global all {})
 
-(global test1 (fn [] (lunit.assert_true true, "never fails")))
+(fn all.setUp
+  [self])
 
-(global test2 (fn [] (lunit.assert_true false, "always fails")))
+(fn all.test-baseline
+  [self]
+  (print "baseline test run")
+  (lu.assertTrue true "never fails"))
+
+
+;; (fn all.test-fails
+ ;;  [self]
+ ;;  (print "failing test run")
+ ;;  (lu.assertTrue false "always fails"))
+
+(local runner (lu.LuaUnit.new))
+(: runner :setOutputType :tap)
+
+(os.exit (: runner :runSuite))
