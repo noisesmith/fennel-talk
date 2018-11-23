@@ -9,6 +9,7 @@
   int csoundCleanup(void *csound);
   double csoundGetKr(void *csound);
   double csoundGetSr(void *csound);
+  int csoundSetOption(void *csound, const char *option);
   uint32_t csoundGetKsmps(void *csound);
   void csoundReset(void *csound);
   void csoundDestroy(void *csound);

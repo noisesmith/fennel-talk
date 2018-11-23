@@ -23,6 +23,10 @@
         cs csound.cs
         csound (csound.make)
         _ (lu.assertUserdata csound)
+        result (cs.csoundSetOption csound "-d")
+        _ (lu.assertTrue (= result 0))
+        result (cs.csoundSetOption csound "-m0")
+        _ (lu.assertTrue (= result 0))
         result (cs.csoundStart csound)
         _ (lu.assertTrue (= result 0))
         result (cs.csoundCompileOrc csound orc)
