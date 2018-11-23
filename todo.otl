@@ -11,12 +11,42 @@ priorities
 		[X] set up ffi basics
 		[X] use the ffi library to load csound
 		[X] run csound via ffi
-	[_] do process based parallelism with *nix specific IPC via sockets
+	[_] do process based parallelism with *nix specific IPC via tcp sockets
 		[_] figure out how to do OS system interaction
-		[_] figure out how to open and use sockets
+		[X] figure out how to open and use tcp sockets
+			[_] test coverage for tcp code in ipc.lua
+		[_] decent abstraction to use sockets via coroutines
+			[X] high level design - a trampoline that needs a driver
+			[_] all the trampoline hops
+				[_] accept hop
+				[_] send hop
+				[_] receive hop
+				[_] exit hop
+			[_] a driver for all the hops
+				[_] evaluate replacing my system with the cqueues lib
 		[_] figure out how to do message or stream encoding on the sockets
+			[_] check out the native lua serdes provided
 	[_] abstractions for a cleaner interface to csound for this task
+		[X] use ffi directly instead of via ipc
+		[_] create a csound object with all api functions taking an instance as methods
 	[_] interactive control of a real time csound process via channels / table data
+		[_] use channels to make k variables
+		[_] use table methods to create / manipulate buffered data
+	[_] contribute back to the community
+		[_] the talk
+		[_] docs
+			[_] add doc for multiple value bind to the reference (currently as if it were a feature of let)
+
+deps used:
+	luasocket
+	ffi
+	libcsound64
+	fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
+
+artistic thoughts
+	all art is conceptual, mainstream art leverages the concept of "talent"
+		this project will use systems design to partially fill the talent niche
+	use the constraints of the underlying structure / limitations to drive artistic decisions
 
 possibilities
 	a command line and result database middleware

@@ -1,15 +1,80 @@
 (local ffi (require :ffi))
+(local socket (require :socket))
 
 (ffi.cdef '
   int printf(const char *fmt, ...);
 ')
 
-(local pks
-  (fn [t spl]
-    (let [splitter (or spl "\n")]
-      (each [k v (pairs t)]
-        (ffi.C.printf "%s%s" k splitter))
-      (print))))
+(fn pks [t spl]
+  (let [splitter (or spl "\n")]
+    (each [k v (pairs t)]
+          (ffi.C.printf "%s%s" k splitter))
+    (print)))
+
+(local servers {})
+
+(local poll-timeout 0.05)
+
+;;; concept:
+;; a driver that looks like core.async with alts!, where each server has poll-timeout
+;; time to accept a client if it is in :available state, or poll-timeout time to get
+;; data if it is in :receiving state, or poll-timeout to send some data if in :sending state.
+;; Accept behavior is baked in and switches to :receiving, get behavior dispatches to the actor
+;; and optionally switches to sending state or :available state as well.
+;; Sending behavior dispatches to the actor and optionally switches to :available or :receiving state.
+
+(local
+ client-accept-co
+ (coroutine.create
+  (fn [server actor state]
+    (let [(client err-state) (: server :accept)]
+      (if client
+        ;; connection
+        (coroutine.yield server
+                         actor
+                         {:state :receiving
+                          :client client})
+        ;; timeout or error
+        (coroutine.yield server
+                         actor
+                         {:state :accept
+                          :error err-state}))))))
+
+(local
+ client-receive-co
+ (coroutine.create
+  (fn [server actor state]
+    (let [(data err-state) (: state.client :receive)]
+      (if data
+        (do
+         (set state.payload data)
+         (coroutine.yield server actor state))
+        (= err-state :timeout)
+        (coroutine.yield server actor state)
+        ;; TODO - we might want another condition that wraps up the server
+        (do
+         (: state.client :close)
+         (set state.client nil)
+         (coroutine.yield server actor state)))))))
+
+(local client-send-co nil)
+
+;; returns a coroutine ready to accept a connection, read, write etc. via "actor" arg
+(fn mk-client-co
+  [server clients actor]
+  (let [state (actor.init)]
+    (client-accept-co server actor state)))
+
+(fn service [actor]
+  (let [server (socket.bind :* 0)
+        (ip port) (: server :getsockname)
+        clients {}
+        cleint-handles {}
+        client-fn (mk-client-co server clients)]
+    {:server server
+     :client-handles client-handles
+     :clients clients}))
 
 {:pks pks
- :ffi ffi}
+ :servers servers
+ :service service}

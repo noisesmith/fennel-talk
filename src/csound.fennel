@@ -1,6 +1,7 @@
-(local ipc (require :ipc))
+(local ffi (require :ffi))
+(local cs (ffi.load :libcsound64))
 
-(ipc.ffi.cdef '
+(ffi.cdef '
   void* csoundCreate(void *hostData);
   int csoundStart(void *csound);
   int csoundCompileOrc(void *csound, const char *str);
@@ -15,11 +16,8 @@
   void csoundDestroy(void *csound);
 ')
 
-(local cs (ipc.ffi.load :libcsound64))
-
-(local make
-  (fn []
-    (cs.csoundCreate 0)))
+(fn make []
+  (cs.csoundCreate 0))
 
 {:make make
  :cs cs}
