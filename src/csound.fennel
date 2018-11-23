@@ -2,6 +2,16 @@
 
 (ipc.ffi.cdef '
   void* csoundCreate(void *hostData);
+  int csoundStart(void *csound);
+  int csoundCompileOrc(void *csound, const char *str);
+  int csoundReadScore(void *csound, const char *str);
+  int csoundPerformKsmps(void *csound);
+  int csoundCleanup(void *csound);
+  double csoundGetKr(void *csound);
+  double csoundGetSr(void *csound);
+  uint32_t csoundGetKsmps(void *csound);
+  void csoundReset(void *csound);
+  void csoundDestroy(void *csound);
 ')
 
 (local cs (ipc.ffi.load :libcsound64))

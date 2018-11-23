@@ -9,4 +9,4 @@ csound.lua: ipc.lua
 test: csound-test ipc-test
 
 clean:
-	rm -f *.lua
+	rm -f *.lua test.wav
