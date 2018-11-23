@@ -17,6 +17,8 @@ priorities
 			[_] test coverage for tcp code in ipc.lua
 		[_] decent abstraction to use sockets via coroutines
 			[X] high level design - a trampoline that needs a driver
+			[X] refactor of the hops so the coroutine logic is testable separate from network usage
+			[_] refactor of the hops so every step has a compatible return value
 			[_] all the trampoline hops
 				[_] accept hop
 				[_] send hop
@@ -38,10 +40,11 @@ priorities
 			[_] add doc for multiple value bind to the reference (currently as if it were a feature of let)
 
 deps used:
-	luasocket
+	fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
 	ffi
 	libcsound64
-	fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
+	luasocket
+	lume
 
 artistic thoughts
 	all art is conceptual, mainstream art leverages the concept of "talent"
