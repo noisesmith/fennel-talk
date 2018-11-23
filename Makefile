@@ -1,10 +1,12 @@
 %.lua: src/%.fennel
-	fennel --compile $^ > $@
+	fennel --compile $< > $@
 
-test: ipc-test
+%-test: test/%-test.fennel %.lua
+	fennel $< all
 
-ipc-test: ipc.lua test/ipc-test.fennel
-	fennel test/ipc-test.fennel all
+csound.lua: ipc.lua
+
+test: csound-test ipc-test
 
 clean:
-	rm *.lua
+	rm -f *.lua

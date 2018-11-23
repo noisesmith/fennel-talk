@@ -1,15 +1,20 @@
 priorities
-	use fennel with lua
-		figure out how to define a library properly
-		figure out how to do OS system interaction
-	do process based parallelism with *nix specific IPC via sockets
-		figure out how to open and use sockets
-		figure out how to do message or stream encoding on the sockets
-	connect to csound via c api
-	use luaunit for tests
+	[X] use fennel with lua
+		[X] figure out how to define a library properly
+		[X] Makefile and workflow to use libraries
+	[X] use luaunit for tests
 		: luaunit installed via apt
-		copy the sample test
-		: luaunit test works
+		[X] copy the sample test
+			: luaunit test works
+		[X] Makefile set up to run tests
+	[_] connect to csound via c api
+		[X] set up ffi basics
+		[X] use the ffi library to load csound
+		[_] run csound via ffi
+	[_] do process based parallelism with *nix specific IPC via sockets
+		[_] figure out how to do OS system interaction
+		[_] figure out how to open and use sockets
+		[_] figure out how to do message or stream encoding on the sockets
 
 possibilities
 	a command line and result database middleware

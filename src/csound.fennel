@@ -1,0 +1,14 @@
+(local ipc (require :ipc))
+
+(ipc.ffi.cdef '
+  void* csoundCreate(void *hostData);
+')
+
+(local cs (ipc.ffi.load :libcsound64))
+
+(local make
+  (fn []
+    (cs.csoundCreate 0)))
+
+{:make make
+ :cs cs}

@@ -1,9 +1,15 @@
 (local ffi (require :ffi))
 
+(ffi.cdef '
+  int printf(const char *fmt, ...);
+')
+
 (local pks
-  (fn [t]
-    (each [k v (pairs t)]
-      (print k))))
+  (fn [t spl]
+    (let [splitter (or spl "\n")]
+      (each [k v (pairs t)]
+        (ffi.C.printf "%s%s" k splitter))
+      (print))))
 
 {:pks pks
  :ffi ffi}
