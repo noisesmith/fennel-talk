@@ -1,5 +1,6 @@
 (local ffi (require :ffi))
 (local cs (ffi.load :libcsound64))
+(require-macros 'macros.util')
 
 (ffi.cdef '
   void* csoundCreate(void *hostData);
@@ -22,52 +23,52 @@
   (let [self {:cs (cs.csoundCreate 0)}]
     (setmetatable self {:__index csound})))
 
-(fn csound.create
-  [self]
+(method :csound:create
+  []
   (set self.cs (cs.csoundCreate 0)))
 
-(fn csound.start
-  [self]
+(method :csound:start
+  []
   (cs.csoundStart self.cs))
 
-(fn csound.compile-orc
-  [self orc]
+(method :csound:compile-orc
+  [orc]
   (cs.csoundCompileOrc self.cs orc))
 
-(fn csound.read-score
-  [self score]
+(method :csound:read-score
+  [score]
   (cs.csoundReadScore self.cs score))
 
-(fn csound.perform-ksmps
-  [self]
+(method :csound:perform-ksmps
+  []
   (cs.csoundPerformKsmps self.cs))
 
-(fn csound.cleanup
-  [self]
+(method :csound:cleanup
+  []
   (cs.csoundCleanup self.cs))
 
-(fn csound.get-kr
-  [self]
+(method :csound:get-kr
+  []
   (cs.csoundGetKr self.cs))
 
-(fn csound.get-sr
-  [self]
+(method :csound:get-sr
+  []
   (cs.csoundGetSr self.cs))
 
-(fn csound.set-option
-  [self opt]
+(method :csound:set-option
+  [opt]
   (cs.csoundSetOption self.cs opt))
 
-(fn csound.get-ksmps
-  [self]
+(method :csound:get-ksmps
+  []
   (cs.csoundGetKsmps self.cs))
 
-(fn csound.reset
-  [self]
+(method :csound:reset
+  []
   (cs.csoundReset self.cs))
 
-(fn csound.destroy
-  [self]
+(method :csound:destroy
+  []
   (cs.csoundDestroy self.cs))
 
 {:csound csound
