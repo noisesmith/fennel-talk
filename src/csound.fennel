@@ -16,8 +16,59 @@
   void csoundDestroy(void *csound);
 ')
 
-(fn make []
-  (cs.csoundCreate 0))
+(local csound {})
 
-{:make make
+(fn csound.new []
+  (let [self {:cs (cs.csoundCreate 0)}]
+    (setmetatable self {:__index csound})))
+
+(fn csound.create
+  [self]
+  (set self.cs (cs.csoundCreate 0)))
+
+(fn csound.start
+  [self]
+  (cs.csoundStart self.cs))
+
+(fn csound.compile-orc
+  [self orc]
+  (cs.csoundCompileOrc self.cs orc))
+
+(fn csound.read-score
+  [self score]
+  (cs.csoundReadScore self.cs score))
+
+(fn csound.perform-ksmps
+  [self]
+  (cs.csoundPerformKsmps self.cs))
+
+(fn csound.cleanup
+  [self]
+  (cs.csoundCleanup self.cs))
+
+(fn csound.get-kr
+  [self]
+  (cs.csoundGetKr self.cs))
+
+(fn csound.get-sr
+  [self]
+  (cs.csoundGetSr self.cs))
+
+(fn csound.set-option
+  [self opt]
+  (cs.csoundSetOption self.cs opt))
+
+(fn csound.get-ksmps
+  [self]
+  (cs.csoundGetKsmps self.cs))
+
+(fn csound.reset
+  [self]
+  (cs.csoundReset self.cs))
+
+(fn csound.destroy
+  [self]
+  (cs.csoundDestroy self.cs))
+
+{:csound csound
  :cs cs}

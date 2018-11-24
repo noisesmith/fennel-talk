@@ -11,26 +11,27 @@ priorities
 		[X] set up ffi basics
 		[X] use the ffi library to load csound
 		[X] run csound via ffi
+	[X] abstractions for a cleaner interface to csound for this task
+		[X] use ffi directly instead of via ipc
+		[X] create a csound object with all api functions taking an instance as methods
 	[_] do process based parallelism with *nix specific IPC via tcp sockets
-		[_] figure out how to do OS system interaction
 		[X] figure out how to open and use tcp sockets
-			[_] test coverage for tcp code in ipc.lua
+		[_] evaluate replacing my system with the cqueues lib
+		[_] test coverage for tcp code in ipc.lua
 		[_] decent abstraction to use sockets via coroutines
-			[X] high level design - a trampoline that needs a driver
-			[X] refactor of the hops so the coroutine logic is testable separate from network usage
-			[_] refactor of the hops so every step has a compatible return value
+			[_] high level design - a trampoline that needs a driver
+			[_] refactor of the hops so the coroutine logic is testable separate from network usage
+			[_] refactor hops and driver function to separate trampolining from coroutines
+			[_] rework to use the cqueue structures
 			[_] all the trampoline hops
 				[_] accept hop
 				[_] send hop
 				[_] receive hop
 				[_] exit hop
 			[_] a driver for all the hops
-				[_] evaluate replacing my system with the cqueues lib
+		[_] figure out how to do OS system interaction
 		[_] figure out how to do message or stream encoding on the sockets
 			[_] check out the native lua serdes provided
-	[_] abstractions for a cleaner interface to csound for this task
-		[X] use ffi directly instead of via ipc
-		[_] create a csound object with all api functions taking an instance as methods
 	[_] interactive control of a real time csound process via channels / table data
 		[_] use channels to make k variables
 		[_] use table methods to create / manipulate buffered data

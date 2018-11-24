@@ -12,40 +12,40 @@
  endin
 ")
 
-(local mk-sco
-  ;; creates a simple sco that runs for a given number of seconds
-  (fn [seconds]
-    (.. "i1 0 " seconds " 2000 440")))
+;; creates a simple sco that runs for a given number of seconds
+(fn mk-sco [seconds]
+  (.. "i1 0 " seconds " 2000 440"))
+
+(local is lu.assertTrue)
 
 (fn all.test-synth
   [self]
   (let [duration 5
-        cs csound.cs
-        csound (csound.make)
-        _ (lu.assertUserdata csound)
-        result (cs.csoundSetOption csound "-d")
-        _ (lu.assertTrue (= result 0))
-        result (cs.csoundSetOption csound "-m0")
-        _ (lu.assertTrue (= result 0))
-        result (cs.csoundStart csound)
-        _ (lu.assertTrue (= result 0))
-        result (cs.csoundCompileOrc csound orc)
-        _ (lu.assertTrue (= result 0))
-        result (cs.csoundReadScore csound (mk-sco duration))
-        _ (lu.assertTrue (= result 0))
-        sr (cs.csoundGetSr csound)
-        ksmps (cs.csoundGetKsmps csound)
-        kr (cs.csoundGetKr csound)
+        cs (csound.csound.new)
+        _ (lu.assertUserdata cs.cs)
+        res (: cs :set-option "-d")
+        _ (is (= res 0))
+        res (: cs :set-option "-m0")
+        _ (is (= res 0))
+        res (: cs :start)
+        _ (is (= res 0))
+        res (: cs :compile-orc orc)
+        _ (is (= res 0))
+        result (: cs :read-score (mk-sco duration))
+        _ (is (= res 0))
+        sr (: cs :get-sr)
+        ksmps (: cs :get-ksmps)
+        kr (: cs :get-kr)
         iteration-count (/ (* duration sr) ksmps)]
-    (lu.assertTrue (= sr 44100))
-    (lu.assertTrue (= ksmps (/ sr kr)))
-    (lu.assertTrue (= iteration-count (* duration kr)))
+    (is (= sr 44100))
+    (is (= ksmps (/ sr kr)))
+    (is (= iteration-count (* duration kr)))
     (for [i 0 iteration-count]
-      (lu.assertTrue (= (cs.csoundPerformKsmps csound)
-                        0)))
-    (let [result (cs.csoundCleanup csound)]
-      (cs.csoundDestroy csound)
-      (lu.assertTrue (= result 0))
+      (is (= (: cs :perform-ksmps)
+             0)))
+    (let [result (: cs :cleanup)]
+      (: cs :destroy)
+      (is (= result 0))
       result)))
 
 (local runner (lu.LuaUnit.new))
