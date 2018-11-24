@@ -14,27 +14,25 @@ priorities
 	[X] abstractions for a cleaner interface to csound for this task
 		[X] use ffi directly instead of via ipc
 		[X] create a csound object with all api functions taking an instance as methods
-	[_] do process based parallelism with *nix specific IPC via tcp sockets
-		[X] figure out how to open and use tcp sockets
-		[_] evaluate replacing my system with the cqueues lib
-		[_] test coverage for tcp code in ipc.lua
-		[_] decent abstraction to use sockets via coroutines
-			[_] high level design - a trampoline that needs a driver
-			[_] refactor of the hops so the coroutine logic is testable separate from network usage
-			[_] refactor hops and driver function to separate trampolining from coroutines
-			[_] rework to use the cqueue structures
-			[_] all the trampoline hops
-				[_] accept hop
-				[_] send hop
-				[_] receive hop
-				[_] exit hop
-			[_] a driver for all the hops
-		[_] figure out how to do OS system interaction
-		[_] figure out how to do message or stream encoding on the sockets
-			[_] check out the native lua serdes provided
+		[_] use the csound api to stop printing to stdout
 	[_] interactive control of a real time csound process via channels / table data
 		[_] use channels to make k variables
 		[_] use table methods to create / manipulate buffered data
+	[_] tcp communication / ipc via cqueues
+		[_] rewrite ipc.lua entirely
+		[_] test coverage for tcp code in ipc.lua
+		[_] decent abstraction to use sockets via coroutines
+			[_] high level design
+				[_] a trampoline that needs a driver, in a coroutine
+				[_] define the trampoline hops
+					: ensure coroutine logic is testable, separate from network usage
+					[_] accept hop
+					[_] send hop
+					[_] receive hop
+					[_] exit hop
+			[_] a driver for all the hops
+		[_] set up threads / fork
+		[_] figure out how to do message or stream encoding on the sockets
 	[_] contribute back to the community
 		[_] the talk
 		[_] docs
@@ -44,8 +42,8 @@ deps used:
 	fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
 	ffi
 	libcsound64
-	luasocket
 	lume
+	cqueues
 
 artistic thoughts
 	all art is conceptual, mainstream art leverages the concept of "talent"
@@ -65,5 +63,9 @@ defunct / obsolete / speculative
 		lua 5.1 can't use the ffi module, so it's going to be csound inside lua
 		create a lua program that loads up csound, initializes the API, etc.
 			: do this in pure lua or jump into fennel?
-			jump into fennel!
-		attempted reinstalling so that csound would use lua5.2, gave up
+			: jump into fennel!
+	attempted reinstalling so that csound would use lua5.2, gave up
+		[X] do process based parallelism with *nix specific IPC via tcp sockets
+		[X] figure out how to open and use tcp sockets
+		[X] evaluate replacing my system with the cqueues lib
+			: yes

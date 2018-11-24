@@ -23,51 +23,51 @@
   (let [self {:cs (cs.csoundCreate 0)}]
     (setmetatable self {:__index csound})))
 
-(method :csound:create
+(method csound:create
   []
   (set self.cs (cs.csoundCreate 0)))
 
-(method :csound:start
+(method csound:start
   []
   (cs.csoundStart self.cs))
 
-(method :csound:compile-orc
+(method csound:compile-orc
   [orc]
   (cs.csoundCompileOrc self.cs orc))
 
-(method :csound:read-score
+(method csound:read-score
   [score]
   (cs.csoundReadScore self.cs score))
 
-(method :csound:perform-ksmps
+(method csound:perform-ksmps
   []
   (cs.csoundPerformKsmps self.cs))
 
-(method :csound:cleanup
+(method csound:cleanup
   []
   (cs.csoundCleanup self.cs))
 
-(method :csound:get-kr
+(method csound:get-kr
   []
   (cs.csoundGetKr self.cs))
 
-(method :csound:get-sr
+(method csound:get-sr
   []
   (cs.csoundGetSr self.cs))
 
-(method :csound:set-option
+(method csound:set-option
   [opt]
   (cs.csoundSetOption self.cs opt))
 
-(method :csound:get-ksmps
+(method csound:get-ksmps
   []
   (cs.csoundGetKsmps self.cs))
 
-(method :csound:reset
+(method csound:reset
   []
   (cs.csoundReset self.cs))
 
-(method :csound:destroy
+(method csound:destroy
   []
   (cs.csoundDestroy self.cs))
 
