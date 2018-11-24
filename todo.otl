@@ -14,7 +14,7 @@ priorities
 	[X] abstractions for a cleaner interface to csound for this task
 		[X] use ffi directly instead of via ipc
 		[X] create a csound object with all api functions taking an instance as methods
-		[_] use the csound api to stop printing to stdout
+		[X] use the csound api to stop printing to stdout
 	[_] interactive control of a real time csound process via channels / table data
 		[_] use channels to make k variables
 		[_] use table methods to create / manipulate buffered data

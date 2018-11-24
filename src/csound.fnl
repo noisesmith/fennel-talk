@@ -1,26 +1,8 @@
 (local ffi (require :ffi))
-(local cs (ffi.load :libcsound64))
+(local cs (require :csound_raw))
 (require-macros 'macros.util')
 
-(ffi.cdef '
-  void* csoundCreate(void *hostData);
-  int csoundStart(void *csound);
-  int csoundCompileOrc(void *csound, const char *str);
-  int csoundReadScore(void *csound, const char *str);
-  int csoundPerformKsmps(void *csound);
-  int csoundCleanup(void *csound);
-  double csoundGetKr(void *csound);
-  double csoundGetSr(void *csound);
-  int csoundSetOption(void *csound, const char *option);
-  uint32_t csoundGetKsmps(void *csound);
-  void csoundReset(void *csound);
-  void csoundDestroy(void *csound);
-  void csoundCreateMessageBuffer(void *csound, int toStdOut);
-  int csoundGetMessageCnt(void *csound);
-  const char* csoundGetFirstMessage(void *csound);
-  void csoundPopFirstMessage(void *csound);
-')
-
+;; the class we are defining here
 (local csound {})
 
 (fn csound.new [buffer]
@@ -29,6 +11,8 @@
               :csound-library cs}]
     (setmetatable self {:__index csound})
     (: self :create-message-buffer buffer-arg)
+    ;; override some default opts...
+    (: self :set-opts "-d" "-m0")
     self))
 
 (method csound:create
