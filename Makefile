@@ -1,7 +1,7 @@
-%.lua: src/%.fennel
+%.lua: src/%.fnl
 	fennel --compile $< > $@
 
-%-test: test/%-test.fennel %.lua
+%-test: test/%-test.fnl %.lua
 	fennel $< all
 
 test: csound-test ipc-test

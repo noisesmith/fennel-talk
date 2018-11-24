@@ -1,5 +1,5 @@
 ;; example of using luaunit via fennel
-;; run with 'fennel luaunit_sample.fennel test_toto
+;; run with 'fennel luaunit_sample.fnl test_toto
 (local lu (require :luaunit))
 
 ;; the name is not idiomatic, but a name with dashes breaks(!?)
