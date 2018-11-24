@@ -15,13 +15,21 @@
   uint32_t csoundGetKsmps(void *csound);
   void csoundReset(void *csound);
   void csoundDestroy(void *csound);
+  void csoundCreateMessageBuffer(void *csound, int toStdOut);
+  int csoundGetMessageCnt(void *csound);
+  const char* csoundGetFirstMessage(void *csound);
+  void csoundPopFirstMessage(void *csound);
 ')
 
 (local csound {})
 
-(fn csound.new []
-  (let [self {:cs (cs.csoundCreate 0)}]
-    (setmetatable self {:__index csound})))
+(fn csound.new [buffer]
+  (let [buffer-arg (or buffer 0)
+        self {:cs (cs.csoundCreate 0)
+              :csound-library cs}]
+    (setmetatable self {:__index csound})
+    (: self :create-message-buffer buffer-arg)
+    self))
 
 (method csound:create
   []
@@ -71,5 +79,43 @@
   []
   (cs.csoundDestroy self.cs))
 
-{:csound csound
- :cs cs}
+(method csound:create-message-buffer
+  [to-stdout]
+  (cs.csoundCreateMessageBuffer self.cs to-stdout))
+
+(method csound:get-message-cnt
+   []
+   (cs.csoundGetMessageCnt self.cs))
+
+(method csound:get-first-message
+   []
+   (ffi.string (cs.csoundGetFirstMessage self.cs)))
+
+(method  csound:pop-first-message
+   []
+   (cs.csoundPopFirstMessage self.cs))
+
+(method csound:set-opts
+   [...]
+   (var return-value 0)
+   (var option nil)
+   (each [_ opt (ipairs [...])]
+         (let [ret (: self :set-option opt)]
+           (set option opt)
+           (when (not (= ret 0))
+             (set return-value ret)
+             (break))))
+   (values return-value option))
+
+(method csound:messages
+  []
+  (var res [])
+  (var done? false)
+  (while (not done?)
+    (let [message (: self :get-first-message)]
+      (table.insert res message)
+      (: self :pop-first-message)
+      (set done?  (<= (: self :get-message-cnt) 0))))
+    res)
+
+csound
