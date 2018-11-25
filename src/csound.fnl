@@ -102,4 +102,12 @@
       (set done?  (<= (: self :get-message-cnt) 0))))
     res)
 
+(method csound:get-control-channel
+  [id]
+  (cs.csoundGetControlChannel self.cs id))
+
+(method csound:set-control-channel
+  [id v]
+  (cs.csoundSetControlChannel self.cs id v))
+
 csound

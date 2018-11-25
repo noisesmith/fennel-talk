@@ -7,24 +7,38 @@
   [self])
 
 (local orc
-"instr 1
-  out(linen(oscili(p4,p5),0.1,p3,0.1))
+"chn_k \"cps-left\", 3
+ chn_k \"cps-right\", 3
+
+ instr 1
+  kcpsl chnget \"cps-left\"
+  kcpsr chnget \"cps-right\"
+  outs linen(oscili(p4,kcpsl),0.1,p3,0.1), linen(oscili(p4,kcpsr),0.1,p3,0.1)
  endin
 ")
 
 ;; creates a simple sco that runs for a given number of seconds
 (fn mk-sco [seconds]
-  (.. "i1 0 " seconds " 2000 440"))
+  (.. "i1 0 " seconds " 10000"))
 
 (local is lu.assertTrue)
 
+(fn wobble
+  [n factor]
+  (let [;; get a fraction from -1 .. 1
+        raw (- (* (math.random) 2) 1)
+        ;; get a curved distribution, preserving sign
+        curved (* raw raw raw)
+        value (* curved factor)]
+    (+ n value)))
+
 (fn all.test-synth
   [self]
-  (let [duration 5
+  (let [duration 50
         print-messages 0
         cs (csound.new)
         _ (lu.assertUserdata cs.cs)
-        (res final) (: cs :set-opts "-d" "-m0")
+        (res final) (: cs :set-opts "-d" "--nchnls=2" "-m0")
         _ (is (= res 0) "success from setting opts")
         _ (is (= final "-m0") "last opt processed is returned")
         res (: cs :start)
@@ -50,7 +64,13 @@
     (is (= sr 44100))
     (is (= ksmps (/ sr kr)))
     (is (= iteration-count (* duration kr)))
+    (var cpsl 440)
+    (var cpsr 440)
     (for [i 0 iteration-count]
+      (set cpsl (wobble cpsl 10))
+      (set cpsr (wobble cpsr 10))
+      (: cs :set-control-channel :cps-left cpsl)
+      (: cs :set-control-channel :cps-right cpsr)
       (is (= (: cs :perform-ksmps)
              0)
           "success from performance cycle"))
