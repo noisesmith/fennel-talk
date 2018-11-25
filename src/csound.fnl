@@ -110,4 +110,26 @@
   [id v]
   (cs.csoundSetControlChannel self.cs id v))
 
+(method csound:table-length
+  [n]
+  (cs.csoundTableLength self.cs n))
+
+(method csound:table-get
+   [n index]
+   (cs.csoundTableGet self.cs n index))
+
+(method csound:table-set
+   [n index value]
+   (cs.csoundTableSet self.cs n index value))
+
+(method csound:table-update
+    [n f]
+    (let [size (: self :table-length n)]
+      (assert (not (= size -1))
+              (.. "table-update: table " n " not found"))
+      (for [i 0 (- size 1)]
+        (let [current (: self :table-get n i)
+              updated (f current)]
+          (: self :table-set n i updated)))))
+
 csound

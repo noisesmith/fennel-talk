@@ -37,6 +37,12 @@
   double csoundGetControlChannel(void* csound, const char* name, int* err);
 
   void csoundSetControlChannel(void* csound, const char* name, double v);
+
+  int csoundTableLength(void* csound, int table);
+
+  double csoundTableGet(void* csound, int table, int index);
+
+  void csoundTableSet(void* csound, int table, int index, double value);
 ')
 
 cs

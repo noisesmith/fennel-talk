@@ -13,13 +13,16 @@
  instr 1
   kcpsl chnget \"cps-left\"
   kcpsr chnget \"cps-right\"
-  outs linen(oscili(p4,kcpsl),0.1,p3,0.1), linen(oscili(p4,kcpsr),0.1,p3,0.1)
+  al linen oscili(p4,kcpsl,1), 0.1, p3, 0.1
+  ar linen oscili(p4,kcpsr,1), 0.1, p3, 0.1
+  outs al, ar
  endin
 ")
 
 ;; creates a simple sco that runs for a given number of seconds
 (fn mk-sco [seconds]
-  (.. "i1 0 " seconds " 10000"))
+  (.. "f1 0 32768 10 1" "\n"
+   "i1 0 " seconds " 10000"))
 
 (local is lu.assertTrue)
 
@@ -34,9 +37,8 @@
 
 (fn all.test-synth
   [self]
-  (let [duration 50
-        print-messages 0
-        cs (csound.new)
+  (let [duration 5
+        cs (csound.new 0)
         _ (lu.assertUserdata cs.cs)
         (res final) (: cs :set-opts "-d" "--nchnls=2" "-m0")
         _ (is (= res 0) "success from setting opts")
@@ -73,7 +75,9 @@
       (: cs :set-control-channel :cps-right cpsr)
       (is (= (: cs :perform-ksmps)
              0)
-          "success from performance cycle"))
+          "success from performance cycle")
+      (when (= 0 (% i 1000))
+        (: cs :table-update 1 (fn [x] (wobble x 0.01)))))
     (let [#messages (: cs :get-message-cnt)
           messages (: cs :messages)]
       (is (= #messages (# messages))

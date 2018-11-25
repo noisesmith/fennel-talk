@@ -15,9 +15,9 @@ priorities
 		[X] use ffi directly instead of via ipc
 		[X] create a csound object with all api functions taking an instance as methods
 		[X] use the csound api to stop printing to stdout
-	[_] interactive control of a real time csound process via channels / table data
-		[_] use channels to make k variables
-		[_] use table methods to create / manipulate buffered data
+	[X] interactive control of a real time csound process via channels / table data
+		[X] use channels to make k variables
+		[X] use table methods to create / manipulate buffered data
 	[_] tcp communication / ipc via cqueues
 		[_] rewrite ipc.lua entirely
 		[_] test coverage for tcp code in ipc.lua
