@@ -1,6 +1,5 @@
+(require-macros :macros/util)
 (local lu (require :luaunit))
-
-(local util (require :util))
 
 (global all {})
 
@@ -9,8 +8,7 @@
 
 (fn all.test-baseline
   [self]
-  (print "baseline test run")
-  (lu.assertTrue true "never fails"))
+  (is true "never fails"))
 
 
 ;; (fn all.test-fails
