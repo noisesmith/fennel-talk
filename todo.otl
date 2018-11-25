@@ -39,11 +39,13 @@ priorities
 			[_] add doc for multiple value bind to the reference (currently as if it were a feature of let)
 
 deps used:
+	cqueues
 	fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
 	ffi
 	libcsound64
+	luaunit
+	luasocket
 	lume
-	cqueues
 
 possibilities
 	a command line and result database middleware
