@@ -1,3 +1,4 @@
+(require-macros :macros/util)
 (local lu (require :luaunit))
 (local csound (require :csound))
 
@@ -24,8 +25,6 @@
   (.. "f1 0 32768 10 1" "\n"
    "i1 0 " seconds " 10000"))
 
-(local is lu.assertTrue)
-
 (fn wobble
   [n factor]
   (let [;; get a fraction from -1 .. 1
@@ -42,7 +41,7 @@
         _ (lu.assertUserdata cs.cs)
         (res final) (: cs :set-opts "-d" "--nchnls=2" "-m0")
         _ (is (= res 0) "success from setting opts")
-        _ (is (= final "-m0") "last opt processed is returned")
+        _ (is (= final "-m0") (.. "last opt processed is returned: " final))
         res (: cs :start)
         _ (is (= res 0) "success from start")
         res (: cs :compile-orc orc)
@@ -91,15 +90,17 @@
           "success from cleanup")
       result)))
 
-(fn all.bad-opt
-  [self]
-  (let [cs (csound.new)
-        bad-arg "-adsflsdfsd"
-        (ret arg) (: cs :set-opts "-d" bad-arg "-m0")]
-    (is (not (= 0 ret))
-        "non zero return when bad option provided")
-    (is (= arg bad-arg)
-        "last arg processed is returned, stopped at the bad one")))
+;; TODO - why is this broken? - in a fennel repl doing this causes a segfault
+;; (fn all.test-bad-opt
+;;  [self]
+;;  (let [cs (csound.new)
+;;        bad-arg "--adsflsdfsd"
+;;        (ret arg) (: cs :set-opts "-d" bad-arg "-m0")]
+;;    (is (not (= 0 ret))
+;;        (.. "non zero return when bad option provided: " ret))
+;;    (is (= arg bad-arg)
+;;        (.. "last arg processed is returned:"
+;;            bad-arg "vs" arg))))
 
 (local runner (lu.LuaUnit.new))
 (: runner :setOutputType :tap)

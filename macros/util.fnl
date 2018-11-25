@@ -13,4 +13,10 @@
           [(sym :self) (unpack args)]
           ...)))
 
-{:method method}
+(fn is
+  [...]
+  (list (sym :let) [(sym :lua-unit) (list (sym :require) :luaunit)]
+    (list (sym :lua-unit.assertTrue) ...)))
+
+{:method method
+ :is is}

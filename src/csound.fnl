@@ -1,5 +1,5 @@
 (local ffi (require :ffi))
-(local cs (require :csound_raw))
+(local cs (require :csound-raw))
 (require-macros 'macros.util')
 
 ;; the class we are defining here
@@ -80,16 +80,14 @@
    (cs.csoundPopFirstMessage self.cs))
 
 (method csound:set-opts
-   [...]
-   (var return-value 0)
-   (var option nil)
-   (each [_ opt (ipairs [...])]
-         (let [ret (: self :set-option opt)]
-           (set option opt)
-           (when (not (= ret 0))
-             (set return-value ret)
-             (break))))
-   (values return-value option))
+  [...]
+  (var ret 0)
+  (var option nil)
+  (each [_ opt (ipairs [...])]
+        (when (= ret 0)
+          (set option opt)
+          (set ret (: self :set-option option))))
+  (values ret option))
 
 (method csound:messages
   []

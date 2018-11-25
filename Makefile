@@ -4,7 +4,7 @@
 %-test: test/%-test.fnl %.lua
 	fennel $< all
 
-csound.lua: src/csound.fnl csound_raw.lua macros/util.fnl
+csound.lua: src/csound.fnl csound-raw.lua macros/util.fnl
 
 test: csound-test util-test
 
