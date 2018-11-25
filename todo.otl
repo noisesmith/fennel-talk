@@ -45,11 +45,6 @@ deps used:
 	lume
 	cqueues
 
-artistic thoughts
-	all art is conceptual, mainstream art leverages the concept of "talent"
-		this project will use systems design to partially fill the talent niche
-	use the constraints of the underlying structure / limitations to drive artistic decisions
-
 possibilities
 	a command line and result database middleware
 		: store the string of the input, plus some representation of the
