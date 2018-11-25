@@ -41,11 +41,9 @@ priorities
 deps used:
 	cqueues
 	fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
-	ffi
+	luaffi
 	libcsound64
 	luaunit
-	luasocket
-	lume
 
 possibilities
 	a command line and result database middleware

@@ -6,7 +6,7 @@
 
 csound.lua: src/csound.fnl csound_raw.lua macros/util.fnl
 
-test: csound-test ipc-test
+test: csound-test util-test
 
 clean:
 	rm -f *.lua test.wav

@@ -1,6 +1,6 @@
 (local lu (require :luaunit))
 
-(local ipc (require :ipc))
+(local util (require :util))
 
 (global all {})
 
