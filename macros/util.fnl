@@ -15,6 +15,10 @@
 
 (fn is
   [condition message]
+  "an assertion that the arg is not false or nil, returns the arg,
+  uses the message in the error output if provided
+
+  on further consideration this is silly, it's just assert"
   (list (sym :let) [(sym :lua-unit) (list (sym :require) :luaunit)
                     (sym :result) condition]
     (list (sym :lua-unit.assertTrue)
