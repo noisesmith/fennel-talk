@@ -19,8 +19,10 @@ priorities
 		[X] use channels to make k variables
 		[X] use table methods to create / manipulate buffered data
 	[_] tcp communication / ipc via cqueues
-		[_] rewrite ipc.lua entirely
+		[X] rewrite ipc.lua entirely
 		[_] test coverage for tcp code in ipc.lua
+			[X] server abstraction via cqueues, with test coverage
+			[_] thread sbstraction via cqueues, with test coverage
 		[_] decent abstraction to use sockets via coroutines
 			[_] high level design
 				[_] a trampoline that needs a driver, in a coroutine

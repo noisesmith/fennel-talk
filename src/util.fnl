@@ -10,4 +10,26 @@
           (ffi.C.printf "%s%s" k splitter))
     (print)))
 
-{:pks pks}
+(fn boolean
+  [x]
+  (not (not x)))
+
+(fn null?
+  [x]
+  (= x nil))
+
+(fn zero?
+  [x]
+  (= x 0))
+
+(fn str
+  [x]
+  (if (null? x)
+    "nil"
+    (.. "" x)))
+
+{:pks pks
+ :boolean boolean
+ :null? null?
+ :zero? zero?
+ :str str}

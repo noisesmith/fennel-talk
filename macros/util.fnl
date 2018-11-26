@@ -14,9 +14,24 @@
           ...)))
 
 (fn is
+  [condition message]
+  (list (sym :let) [(sym :lua-unit) (list (sym :require) :luaunit)
+                    (sym :result) condition]
+    (list (sym :lua-unit.assertTrue)
+          ;; the old trick - (not (not x)) coerces x to boolean
+          (list (sym :not) (list (sym :not) (sym :result)))
+          message)
+    (sym :result)))
+
+(fn blows-up?
   [...]
-  (list (sym :let) [(sym :lua-unit) (list (sym :require) :luaunit)]
-    (list (sym :lua-unit.assertTrue) ...)))
+  (list (sym :let)
+        [(list (sym :success?) (sym :value))
+         (list (sym :pcall) (list (sym :fn) [] ...))]
+        (list (sym :if) (sym :success?)
+              nil
+              (sym :value))))
 
 {:method method
- :is is}
+ :is is
+ :blows-up? blows-up?}
