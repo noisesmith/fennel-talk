@@ -3,11 +3,6 @@
 (local socket (require :cqueues.socket))
 (local thread (require :cqueues.thread))
 (local errno (require :cqueues.errno))
-(local util (require :util))
-
-;; (util.pks cqueues " ")
-;; (util.pks socket " ")
-;; (util.pks thread " ")
 
 (fn server
   [port host]
@@ -34,4 +29,11 @@
         ret)))
   (: srv :init port host))
 
-{:server server}
+(fn worker
+  [f ...]
+  (let [(other-thread socket) (thread.start f ...)]
+    {:thread other-thread
+     :socket socket}))
+
+{:server server
+ :thread worker}
