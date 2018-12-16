@@ -18,6 +18,11 @@ priorities
 	[X] interactive control of a real time csound process via channels / table data
 		[X] use channels to make k variables
 		[X] use table methods to create / manipulate buffered data
+	[X] namespace that creates a small composition, based on the current csound test
+	[_] contribute back to the community
+		[_] docs
+			[_] add doc for multiple value bind to the reference (currently as if it were a feature of let)
+		[_] the talk
 	[_] tcp communication / ipc via cqueues
 		[X] rewrite ipc.lua entirely
 		[_] test coverage for tcp code in ipc.lua
@@ -35,10 +40,6 @@ priorities
 			[_] a driver for all the hops
 		[_] set up threads / fork
 		[_] figure out how to do message or stream encoding on the sockets
-	[_] contribute back to the community
-		[_] the talk
-		[_] docs
-			[_] add doc for multiple value bind to the reference (currently as if it were a feature of let)
 
 deps used:
 	cqueues
