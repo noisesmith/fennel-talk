@@ -50,6 +50,8 @@
 
 (method all:test-thread
   []
+  ;; TODO - this test is failing - we need to run
+  ;; the cqueues state machine
   (let [spawn (ipc.thread
                (fn [s]
                  (let [msg (: s :xread "*a" 1)]
