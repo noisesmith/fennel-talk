@@ -4,11 +4,13 @@
 %-test: test/%-test.fnl %.lua
 	fennel $< all
 
-csound.lua: src/csound.fnl csound-raw.lua macros/util.fnl
+csound.lua: csound-raw.lua macros/util.fnl
 
-composition.lua: src/composition.fnl csound.lua
+composition.lua: csound.lua
 
-test: util.lua csound-test util-test ipc-test
+client-server.lua: ipc.lua util.lua
+
+test: util.lua csound-test util-test ipc-test client-server-test
 
 clean:
 	rm -f *.lua test.wav

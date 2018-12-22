@@ -21,19 +21,19 @@ priorities
 	[X] namespace that creates a small composition, based on the current csound test
 	[_] tcp communication / ipc via cqueues
 		[X] rewrite ipc.lua entirely
-		[_] test coverage for tcp code in ipc.lua
+		[X] test coverage for tcp code in ipc.lua
 			[X] server abstraction via cqueues, with test coverage
-			[_] thread sbstraction via cqueues, with test coverage
+			[X] thread sbstraction via cqueues, with test coverage
 		[_] decent abstraction to use sockets via coroutines
+			[X] a driver for all the hops
+				: done with cqueues loop
 			[_] high level design
-				[_] a trampoline that needs a driver, in a coroutine
-				[_] define the trampoline hops
+				[_] define the coroutines
 					: ensure coroutine logic is testable, separate from network usage
 					[_] accept hop
 					[_] send hop
 					[_] receive hop
 					[_] exit hop
-			[_] a driver for all the hops
 		[_] set up threads / fork
 		[_] figure out how to do message or stream encoding on the sockets
 
