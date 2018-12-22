@@ -36,15 +36,11 @@ priorities
 			[_] a driver for all the hops
 		[_] set up threads / fork
 		[_] figure out how to do message or stream encoding on the sockets
-	[_] contribute back to the community
-		[_] docs
-			[_] add doc for multiple value bind to the reference (currently as if it were a feature of let)
-		[_] the talk
 
 deps used:
 	cqueues
 	fennel version - commit 77fdc81d5ee6fbdeba610ce8304026eef249ca42 (macros / quote / unquote implemented)
-	previous fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
+		previous fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
 	luaffi
 	libcsound64
 	luaunit
@@ -68,3 +64,8 @@ defunct / obsolete / speculative
 		[X] figure out how to open and use tcp sockets
 		[X] evaluate replacing my system with the cqueues lib
 			: yes
+
+contribute back to the community
+	[X] docs
+	[X] add doc for multiple value bind to the reference (currently as if it were a feature of let)
+	[_] the talk
