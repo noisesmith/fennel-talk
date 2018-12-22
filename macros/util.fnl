@@ -31,6 +31,14 @@
        nil
        value)))
 
+(fn if-let
+  [bind then ...]
+  `(let ~bind
+     (if ~(. bind 1)
+       ~then
+       ~...)))
+
 {:method method
  :is is
- :blows-up? blows-up?}
+ :blows-up? blows-up?
+ :if-let if-let}

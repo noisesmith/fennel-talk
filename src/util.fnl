@@ -1,4 +1,6 @@
+(require-macros :macros/util)
 (local ffi (require :ffi))
+(local lume (require :lume))
 
 (ffi.cdef '
   int printf(const char *fmt, ...);
@@ -28,8 +30,32 @@
     "nil"
     (.. "" x)))
 
+(fn last
+  [coll]
+  (when coll
+    (. coll (# coll))))
+
+(fn butlast
+  [coll]
+  (when coll
+    (tset coll (# coll) nil)
+    coll))
+
+(fn comp
+  [...]
+  (let [fns [...]
+        composer (fn composer [x functions]
+                   (if-let [f (last functions)]
+                     (composer (f x) (butlast functions))
+                     x))]
+    (fn [x]
+      (composer x (lume.clone fns)))))
+
 {:pks pks
  :boolean boolean
  :null? null?
  :zero? zero?
- :str str}
+ :str str
+ :last last
+ :butlast butlast
+ :comp comp}
