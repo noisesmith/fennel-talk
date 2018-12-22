@@ -4,6 +4,53 @@
 (local thread (require :cqueues.thread))
 (local errno (require :cqueues.errno))
 
+(local
+ read-specs
+ {:eof "*a"
+  :line "*l"
+  :linen "*L"
+  :header "*h"
+  :headern "*H"})
+
+(fn spec
+  [s]
+  "translates a symbolic representation of a read action into
+  a format for xread
+
+  accepts:
+  number N
+    positive - minimum N bytes or until eof
+    negative - minimum 1 byte, max abs(N) or until eof
+  string
+    'eof' - read until closed
+    'line' - read until newline
+    'linen' - read until newline, keep newline
+    'header' - read a mime header
+    'headern' - read a mime header, keep newline
+    any string accepted by cqueues.socket:read or lua file:read
+  table
+    [:mime m] - read mime entity for marker m
+    [:max n] - read minimum 1 byte, max n, or until eof
+    [:min n] - read minimum n bytes, or until eof
+  "
+  (if (= (type s) :number)
+    (tostring s)
+    (= (type s) :string)
+    (or (. read-specs s)
+        s)
+    (~= (type s) :table)
+    (tostring s)
+    (= (. s 1) :mime)
+    (.. "--" (tostring (. s 2)))
+    (= (. s 1) :max)
+    (.. "-" (tostring (. s 2)))
+    (= (. s 1) :min)
+    (tostring (. s 2))))
+
+(fn read
+  [socket fmt ...]
+  (: socket :xread (spec fmt) ...))
+
 (fn server
   [port host]
   (var srv {:type :server})
@@ -29,11 +76,12 @@
         ret)))
   (: srv :init port host))
 
-(fn worker
+(fn -thread
   [f ...]
   (let [(other-thread socket) (thread.start f ...)]
     {:thread other-thread
      :socket socket}))
 
-{:server server
- :thread worker}
+{:read read
+ :server server
+ :thread -thread}

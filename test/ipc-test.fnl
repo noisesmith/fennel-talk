@@ -2,6 +2,14 @@
 (local lu (require :luaunit))
 (local ipc (require :ipc))
 (local util (require :util))
+(local errno (require :cqueues.errno))
+(local socket (require :cqueues.socket))
+
+(fn strerror
+  [x]
+  (if x
+    (errno.strerror x)
+    ""))
 
 (local str util.str)
 (local null? util.null?)
@@ -50,26 +58,28 @@
 
 (method all:test-thread
   []
-  ;; TODO - this test is failing - we need to run
-  ;; the cqueues state machine
   (let [spawn (ipc.thread
                (fn [s]
-                 (let [msg (: s :xread "*a" 1)]
-                   (: s :write (.. "received: " msg))
-                   (: s :flush)
-                   (: s :close))))]
+                 (let [ipc (require :ipc)
+                       msg (ipc.read s :linen 1)]
+                         ; (print "from child, read" msg)
+                         (: s :write (.. "received: " msg)))))]
     (is spawn
         "created a new thread")
-    (is (: spawn.socket :xwrite "HELLO\n" 1)
-        "able to write to a socket")
-    (is (: spawn.socket :flush)
-        "able to flush the socket")
-    (let [read-value (: spawn.socket :xread "*a" 1)]
+    (let [(data err) (: spawn.socket :xwrite "HELLO\n" 1)]
+            (is data (.. "able to write to a socket: "
+                         (strerror err))))
+      (is (: spawn.socket :flush)
+          "able to flush the socket")
+    (let [(read-value err) (ipc.read spawn.socket :linen 1)]
       (is (= read-value
              "received: HELLO\n")
           (.. "able to read back from the socket: "
-              (str read-value))))
-    (: spawn.sockt :close)))
+                    (str read-value)
+                    ", "
+                    (strerror err))))
+      (: spawn.socket :xwrite "DONE\n")
+      (: spawn.socket :close)))
 
 (local runner (lu.LuaUnit.new))
 (: runner :setOutputType :tap)

@@ -51,6 +51,15 @@
     (fn [x]
       (composer x (lume.clone fns)))))
 
+(fn comp+
+  [...]
+  (let [fns [...]]
+    (fn [x]
+      (var res x)
+      (each [_ f (lume.ripairs fns)]
+            (set res (f res)))
+      res)))
+
 {:pks pks
  :boolean boolean
  :null? null?
@@ -58,4 +67,4 @@
  :str str
  :last last
  :butlast butlast
- :comp comp}
+ :comp comp+}
