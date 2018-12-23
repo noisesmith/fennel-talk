@@ -27,6 +27,7 @@ priorities
 		[_] decent abstraction to use sockets via coroutines
 			[X] a driver for all the hops
 				: done with cqueues loop
+			[_] use the thread code to integration test the driver
 			[_] high level design
 				[_] define the coroutines
 					: ensure coroutine logic is testable, separate from network usage
