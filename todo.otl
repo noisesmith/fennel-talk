@@ -24,6 +24,7 @@ priorities
 		[X] test coverage for tcp code in ipc.lua
 			[X] server abstraction via cqueues, with test coverage
 			[X] thread sbstraction via cqueues, with test coverage
+			[X] non-socket coroutines in the cqueues wrapper for testing
 		[_] decent abstraction to use sockets via coroutines
 			[X] a driver for all the hops
 				: done with cqueues loop

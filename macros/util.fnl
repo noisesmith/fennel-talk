@@ -38,7 +38,12 @@
        ~then
        ~...)))
 
+(fn comment
+  [...]
+  nil)
+
 {:method method
  :is is
  :blows-up? blows-up?
- :if-let if-let}
+ :if-let if-let
+ :comment comment}

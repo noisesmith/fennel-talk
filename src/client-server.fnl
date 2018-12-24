@@ -3,31 +3,75 @@
 (local ipc (require :ipc))
 (local util (require :util))
 
+(local tracing? true)
+
+(local trace-log [])
+
+(local trace
+       (fn [...]
+         (when tracing?
+           (table.insert trace-log (.. "<<" (table.concat [...] "; ") ">>"))
+           (print ...))))
+
+(local co->
+       (fn [...]
+         (trace (: "client-server.fnl co-> resuming <<%s>>" :format (table.concat [...] "; ")))
+         (coroutine.resume ...)))
+
+(local <-co
+       (fn [...]
+         (trace "client-server.fnl <-co yielding " ...)
+         (coroutine.yeild ...)))
+
+(fn make-child
+  [co cc]
+  (fn [...]
+    (while true
+      ;; the child should return its pollable when resumed.
+      (let [msg (co-> co :consume cc ...)]
+        (trace (: "child of main was given '%s' for '%s'" :format msg ...))
+        (<-co cc msg)))))
+
 (fn main-loop
-  [handler port host-mask]
-  (var connection-count 0)
-  (let [srv (ipc.server port host-mask)
-        cq (cqueues.new)
-        add-child (fn [s]
-                    (let [cc connection-count]
-                      (if s
-                        (tset children cc s)
-                        (tset children s cc))
-                      (set connection-count (+ connection-count 1))
-                      (: cq :wrap
-                        (fn []
-                          (each [ln (: s :lines "*L")]
-                            (: cq :write (handler cc ln)))
-                          (: cq :shutdown "w")))
+  []
+  (var client-count 1)
+  (var clients [])
+  (var ids {})
+  (let [cq (cqueues.new)
+        add-child (fn [co]
+                    (let [cc client-count
+                          new-child (: cq :wrap (make-child co cc))]
+                      (set client-count (+ client-count 1))
+                      (table.insert clients new-child)
+                      (tset ids cc new-child)
                       cc))
-        wait nil]
-    (: cq :wrap
-       (fn []
-         (each [con (: srv.server :clients wait)]
-               (add-child con))))
-    {:start (fn [t-o] (assert (: cq :loop t-o)))
+        start (fn [t-o]
+                (trace "main-loop started at" (cqueues.monotime))
+                (: cq :loop t-o)
+                (trace "main-loop exited at" (cqueues.monotime))
+                true)]
+    {:start start
      :add-child add-child
      :cq cq
-     :connection-count connection-count}))
+     :client-count client-count}))
 
-{:main-loop main-loop}
+(fn tcp-server
+  [add-child handler port host-mask wait]
+  (let [srv (ipc.server port host-mask)]
+    (add-child
+     (fn [...]
+       (trace "tcp server connected with" ...)
+       (each [con (: srv.server :clients wait)]
+             (add-child (fn [...]
+                          (trace "tcp client added with" ...)
+                          (local invoked (<-co con))
+                          (while true
+                            (local resumption (<-co :result (ipc.read con :linen)))
+                            (trace "tcp client woken with" resumption)
+                            ;; wake us when con is ready again
+                            (<-co con)))))))
+    srv))
+
+{:main-loop main-loop
+ :tcp-server tcp-server
+ :trace (fn [] (table.concat trace-log " --\n"))}
