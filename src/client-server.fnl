@@ -3,7 +3,7 @@
 (local ipc (require :ipc))
 (local util (require :util))
 
-(local tracing? true)
+(local tracing? false)
 
 (local trace-log [])
 
@@ -15,13 +15,53 @@
 
 (local co->
        (fn [...]
-         (trace (: "client-server.fnl co-> resuming <<%s>>" :format (table.concat [...] "; ")))
+         ;; (trace (: "client-server.fnl co-> resuming <<%s>>" :format (table.concat [...] "; ")))
          (coroutine.resume ...)))
 
 (local <-co
        (fn [...]
-         (trace "client-server.fnl <-co yielding " ...)
+         ;; (trace "client-server.fnl <-co yielding " ...)
          (coroutine.yeild ...)))
+
+(local ->co
+       (fn [...]
+         ;; (trace "creating coroutine" ...)
+         (coroutine.create ...)))
+
+(fn main-loop-
+  []
+  (var client-count 0)
+  (var clients [])
+  (var continue true)
+  (var messages [])
+  (fn make-child* [f cc]
+    (->co (f cc)))
+  (fn add-child [f]
+    (let [cc (+ client-count 1)
+          new-child (make-child* f cc)]
+      (set client-count cc)
+      (table.insert clients new-child)
+      cc))
+  (fn start
+    []
+    (while continue
+      (when (not (= (# clients) 0))
+        (each [idx,client (ipairs clients)]
+              (when (and continue
+                         (not (= client :done)))
+                (let [msg (co-> client (. messages (# messages)))]
+                  (if (= msg :done)
+                    (tset clients idx :done)
+                    (table.insert messages msg))))))))
+  (fn stop
+    []
+    (set continue false))
+  {:start start
+   :add-child add-child
+   :clients clients
+   :client-count (fn [] client-count)
+   :stop stop
+   :messages messages})
 
 (fn make-child
   [co cc]
@@ -37,19 +77,19 @@
   (var client-count 1)
   (var clients [])
   (var ids {})
-  (let [cq (cqueues.new)
-        add-child (fn [co]
-                    (let [cc client-count
-                          new-child (: cq :wrap (make-child co cc))]
-                      (set client-count (+ client-count 1))
-                      (table.insert clients new-child)
-                      (tset ids cc new-child)
-                      cc))
-        start (fn [t-o]
-                (trace "main-loop started at" (cqueues.monotime))
-                (: cq :loop t-o)
-                (trace "main-loop exited at" (cqueues.monotime))
-                true)]
+  (let [cq (cqueues.new)]
+    (fn add-child [co]
+      (let [cc client-count
+            new-child (: cq :wrap (make-child co cc))]
+        (set client-count (+ client-count 1))
+        (table.insert clients new-child)
+        (tset ids cc new-child)
+        cc))
+    (fn start [t-o]
+      (trace "main-loop started at" (cqueues.monotime))
+      (: cq :loop t-o)
+      (trace "main-loop exited at" (cqueues.monotime))
+      true)
     {:start start
      :add-child add-child
      :cq cq
@@ -73,5 +113,6 @@
     srv))
 
 {:main-loop main-loop
+ :main-loop- main-loop-
  :tcp-server tcp-server
  :trace (fn [] (table.concat trace-log " --\n"))}
