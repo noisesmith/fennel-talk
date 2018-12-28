@@ -35,16 +35,16 @@
   [])
 
 (method
- all:test-main-loop--stop
+ all:test-main-loop:stop
  []
- (let [main (sut.main-loop-)]
+ (let [main (sut.main-loop)]
    (main.stop)
    (main.start)))
 
 (method
- all:test-main-loop-
+ all:test-main-loop
  []
- (let [main (sut.main-loop-)]
+ (let [main (sut.main-loop)]
    (fn quick-exit-co
      [cc]
      (fn []
@@ -54,7 +54,7 @@
    (main.start)))
 
 (method
- all:test-main-loop--2
+ all:test-main-loop:2
  []
  (local events [])
  (var stop (fn []))
@@ -72,7 +72,7 @@
        (<-co cc call-count)
        (set call-count (+ call-count 1))
        (track-calls cc call-count))))
- (let [main (sut.main-loop-)]
+ (let [main (sut.main-loop)]
    (set stop main.stop)
    (for [i 1 20]
      (local child-ret (main.add-child iterated-exit-co))

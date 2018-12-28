@@ -28,22 +28,19 @@
          ;; (trace "creating coroutine" ...)
          (coroutine.create ...)))
 
-(fn main-loop-
+(fn main-loop
   []
   (var client-count 0)
   (var clients [])
   (var continue true)
   (var messages [])
-  (fn make-child* [f cc]
-    (->co (f cc)))
   (fn add-child [f]
     (let [cc (+ client-count 1)
-          new-child (make-child* f cc)]
+          new-child (->co (f cc))]
       (set client-count cc)
       (table.insert clients new-child)
       cc))
-  (fn start
-    []
+  (fn start []
     (while continue
       (when (not (= (# clients) 0))
         (each [idx,client (ipairs clients)]
@@ -63,20 +60,19 @@
    :stop stop
    :messages messages})
 
-(fn make-child
-  [co cc]
-  (fn [...]
-    (while true
-      ;; the child should return its pollable when resumed.
-      (let [msg (co-> co :consume cc ...)]
-        (trace (: "child of main was given '%s' for '%s'" :format msg ...))
-        (<-co cc msg)))))
-
-(fn main-loop
+(fn io-loop
   []
   (var client-count 1)
   (var clients [])
   (var ids {})
+  (fn make-child
+    [co cc]
+    (fn [...]
+      (while true
+        ;; the child should return its pollable when resumed.
+        (let [msg (co-> co :consume cc ...)]
+          (trace (: "child of main was given '%s' for '%s'" :format msg ...))
+          (<-co cc msg)))))
   (let [cq (cqueues.new)]
     (fn add-child [co]
       (let [cc client-count
@@ -113,6 +109,6 @@
     srv))
 
 {:main-loop main-loop
- :main-loop- main-loop-
+ :io-loop io-loop
  :tcp-server tcp-server
  :trace (fn [] (table.concat trace-log " --\n"))}
