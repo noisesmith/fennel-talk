@@ -8,9 +8,9 @@
         _ (assert pos "method requires a spec symbol in the form of object:newmethod")
         target (string.sub spec 1 (- pos 1))
         method (string.sub spec (+ pos 1))]
-    `(fn ~(sym (.. target '.' method))
-       [self ~(unpack args)]
-       ~...)))
+    `(fn @(sym (.. target '.' method))
+       [self @(unpack args)]
+       @...)))
 
 (fn is
   [condition message]
@@ -19,24 +19,24 @@
 
   on further consideration this is silly, it's just assert"
   `(let [lua-unit (require :luaunit)
-         result ~condition]
+         result @condition]
      (lua-unit.assertTrue (not (not result))
-                          ~message)
+                          @message)
      result))
 
 (fn blows-up?
   [...]
-  `(let [(success? value) (pcall (fn [] ~...))]
+  `(let [(success? value) (pcall (fn [] @...))]
      (if success?
        nil
        value)))
 
 (fn if-let
   [bind then ...]
-  `(let ~bind
-     (if ~(. bind 1)
-       ~then
-       ~...)))
+  `(let @bind
+     (if @(. bind 1)
+       @then
+       @...)))
 
 (fn comment
   [...]
