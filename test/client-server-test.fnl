@@ -4,31 +4,11 @@
 (local lu (require :luaunit))
 (local sut (require :client-server))
 
-(local tracing? false)
+(local co-> coroutine.resume)
 
-(local trace
-       (fn [...]
-         (if tracing?
-           (print ...))))
-
-(local co->
-       (fn [...]
-         (trace "client-server-test.fnl co-> resuming " ...)
-         (coroutine.resume ...)))
-
-(local <-co
-       (fn [...]
-          (trace "client-server-test.fnl <-co yielding " ...)
-          (coroutine.yield ...)))
+(local <-co coroutine.yield)
 
 (local ->co coroutine.create)
-
-(fn dump
-  []
-  (print
-   (: ";;;;;;;; from test:\n--\n%s\n--\n:;;;;;;;; :from test"
-      :format
-      (sut.trace))))
 
 (global all {})
 
@@ -91,7 +71,7 @@
  (var results {})
  (let [m (sut.io-loop)]
    (fn consume []
-     (let [pollme {:timeout (fn [] 1)}]
+     (let [pollme {:timeout (fn [] 0.001)}]
        (print "poll in consuming coroutine")
        (cqueues.poll pollme)
        (print "resume in consuming coroutine")
@@ -100,11 +80,10 @@
    (is m)
    (is (m.add-child consume))
    (is (m.start 1))
-   ;; (dump)
    (is (= (# results) 1)
        (.. "expect one result, got " (tostring (# results))))
    (is (= (. results 1) "confirm 1"))))
 
 (local runner (lu.LuaUnit.new))
-(runner.setOutputType runner "tap")
+(runner.setOutputType runner :tap)
 (os.exit (runner.runSuite runner))

@@ -3,30 +3,11 @@
 (local ipc (require :ipc))
 (local util (require :util))
 
-(local tracing? false)
+(local co-> coroutine.resume)
 
-(local trace-log [])
+(local <-co coroutine.yeild)
 
-(local trace
-       (fn [...]
-         (when tracing?
-           (table.insert trace-log (.. "<<" (table.concat [...] "; ") ">>"))
-           (print ...))))
-
-(local co->
-       (fn [...]
-         ;; (trace (: "client-server.fnl co-> resuming <<%s>>" :format (table.concat [...] "; ")))
-         (coroutine.resume ...)))
-
-(local <-co
-       (fn [...]
-         ;; (trace "client-server.fnl <-co yielding " ...)
-         (coroutine.yeild ...)))
-
-(local ->co
-       (fn [...]
-         ;; (trace "creating coroutine" ...)
-         (coroutine.create ...)))
+(local ->co coroutine.create)
 
 (fn main-loop
   []
@@ -67,9 +48,7 @@
       (: cq :wrap f)
       true)
     (fn start [t-o]
-      (trace "main-loop started at" (cqueues.monotime))
       (: cq :loop t-o)
-      (trace "main-loop exited at" (cqueues.monotime))
       true)
     {:start start
      :add-child add-child
@@ -80,19 +59,15 @@
   (let [srv (ipc.server port host-mask)]
     (add-child
      (fn [...]
-       (trace "tcp server connected with" ...)
        (each [con (: srv.server :clients wait)]
              (add-child (fn [...]
-                          (trace "tcp client added with" ...)
                           (local invoked (<-co con))
                           (while true
                             (local resumption (<-co :result (ipc.read con :linen)))
-                            (trace "tcp client woken with" resumption)
                             ;; wake us when con is ready again
                             (<-co con)))))))
     srv))
 
 {:main-loop main-loop
  :io-loop io-loop
- :tcp-server tcp-server
- :trace (fn [] (table.concat trace-log " --\n"))}
+ :tcp-server tcp-server}
