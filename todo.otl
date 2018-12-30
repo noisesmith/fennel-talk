@@ -33,20 +33,23 @@ priorities
 				: b - integrate the event loop with the IO polling
 			[X] integrate the event loop into the IO polling
 			[_] use the thread code to integration test the driver
-			[_] high level design
-				[_] define the coroutines
-					: ensure coroutine logic is testable, separate from network usage
-					[_] accept hop
-					[_] send hop
-					[_] receive hop
-					[_] exit hop
-		[_] set up threads / fork
-		[_] figure out how to do message or stream encoding on the sockets
+	[_] set up communication between I/O loops and main driver / each other
+		[X] simple queue
+		[_] pub/sub via unique client ids
+	[_] investigate using mqtt
+	[_] audio process reading blocks of sound from socket, playing them in series
+		[_] network audio I/O
+		[_] clip series DSL
+	[_] child process generating a block of audio to send to audio process
+	[_] audio process sending input data to children
+		[_] seeding clip series data for round trip(?)
 
 deps used:
 	cqueues
-	fennel version - commit 77fdc81d5ee6fbdeba610ce8304026eef249ca42 (macros / quote / unquote implemented)
-		previous fennel version - commit 9af9906cadc997f071bfd1201be963e49f5010d4
+	fennel version 86198097b8e79771fe5aa877dc849a85bdcc8f66
+		previous fennel versions
+		: commit 9af9906cadc997f071bfd1201be963e49f5010d4
+		: commit 77fdc81d5ee6fbdeba610ce8304026eef249ca42 - (macros / quote / unquote implemented)
 	luaffi
 	libcsound64
 	luaunit

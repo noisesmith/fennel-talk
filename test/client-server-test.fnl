@@ -6,8 +6,7 @@
 
 (global all {})
 
-(method all:setUp
-  [])
+(method all:setUp [])
 
 (method
  all:test-main-loop
