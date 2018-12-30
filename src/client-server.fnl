@@ -3,45 +3,7 @@
 (local ipc (require :ipc))
 (local util (require :util))
 
-(local co-> coroutine.resume)
-
-(local <-co coroutine.yeild)
-
-(local ->co coroutine.create)
-
 (fn main-loop
-  []
-  (var client-count 0)
-  (var clients [])
-  (var continue true)
-  (var messages [])
-  (fn add-child [f]
-    (let [cc (+ client-count 1)
-          new-child (->co (f cc))]
-      (set client-count cc)
-      (table.insert clients new-child)
-      cc))
-  (fn start []
-    (while continue
-      (when (not (= (# clients) 0))
-        (each [idx,client (ipairs clients)]
-              (when (and continue
-                         (not (= client :done)))
-                (let [msg (co-> client (. messages (# messages)))]
-                  (if (= msg :done)
-                    (tset clients idx :done)
-                    (table.insert messages msg))))))))
-  (fn stop
-    []
-    (set continue false))
-  {:start start
-   :add-child add-child
-   :clients clients
-   :client-count (fn [] client-count)
-   :stop stop
-   :messages messages})
-
-(fn io-loop
   []
   (let [cq (cqueues.new)]
     (fn add-child [f]
@@ -61,13 +23,10 @@
      (fn [...]
        (each [con (: srv.server :clients wait)]
              (add-child (fn [...]
-                          (local invoked (<-co con))
                           (while true
-                            (local resumption (<-co :result (ipc.read con :linen)))
-                            ;; wake us when con is ready again
-                            (<-co con)))))))
+                            (ipc.read con :linen)))))))
     srv))
 
 {:main-loop main-loop
- :io-loop io-loop
- :tcp-server tcp-server}
+ :tcp-server tcp-server
+ :poll-me cqueues.sleep}

@@ -28,9 +28,10 @@ priorities
 		[_] decent abstraction to use sockets via coroutines
 			[X] a driver for all the hops
 				: done with cqueues loop
-			[_] design decision
+			[X] design decision
 				: a - integrate the IO polling with the event loop
 				: b - integrate the event loop with the IO polling
+			[X] integrate the event loop into the IO polling
 			[_] use the thread code to integration test the driver
 			[_] high level design
 				[_] define the coroutines
