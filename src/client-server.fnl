@@ -62,25 +62,10 @@
 
 (fn io-loop
   []
-  (var client-count 1)
-  (var clients [])
-  (var ids {})
-  (fn make-child
-    [co cc]
-    (fn [...]
-      (while true
-        ;; the child should return its pollable when resumed.
-        (let [msg (co-> co :consume cc ...)]
-          (trace (: "child of main was given '%s' for '%s'" :format msg ...))
-          (<-co cc msg)))))
   (let [cq (cqueues.new)]
-    (fn add-child [co]
-      (let [cc client-count
-            new-child (: cq :wrap (make-child co cc))]
-        (set client-count (+ client-count 1))
-        (table.insert clients new-child)
-        (tset ids cc new-child)
-        cc))
+    (fn add-child [f]
+      (: cq :wrap f)
+      true)
     (fn start [t-o]
       (trace "main-loop started at" (cqueues.monotime))
       (: cq :loop t-o)
@@ -88,8 +73,7 @@
       true)
     {:start start
      :add-child add-child
-     :cq cq
-     :client-count client-count}))
+     :cq cq}))
 
 (fn tcp-server
   [add-child handler port host-mask wait]
