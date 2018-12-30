@@ -1,5 +1,6 @@
 (require-macros :macros/util)
 (local cqueues (require :cqueues))
+(local sq (require :sque))
 (local ipc (require :ipc))
 (local util (require :util))
 
