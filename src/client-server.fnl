@@ -6,15 +6,33 @@
 
 (fn main-loop
   []
-  (let [cq (cqueues.new)]
-    (fn add-child [f]
+  "returns a set of functions to run a main loop,
+  plus messages, a map from id to message queue
+  and cq, an instances of cqueues used for i/o polling"
+  (let [cq (cqueues.new)
+        messages {}
+        state {}]
+    (fn add-child [f msg]
+      "takes a child function 'f', and an optional
+      messages object 'msg' with methods :id and :set"
+      (when msg
+        (let [id (: msg :id)
+              q {:queue (sq.new)}]
+          (tset messages id q)
+          (: msg :set q)))
       (: cq :wrap f)
       true)
     (fn start [t-o]
-      (: cq :loop t-o)
-      true)
+      (while (and (not (: cq :empty))
+                  (not state.done))
+        (: cq :step t-o))
+      state)
+    (fn quit []
+      (tset state :done true))
     {:start start
      :add-child add-child
+     :messages messages
+     :quit quit
      :cq cq}))
 
 (fn tcp-server
