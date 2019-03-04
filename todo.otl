@@ -29,14 +29,22 @@ final conf tasks
 		[_] messages that ask coordination process for audio
 		[_] construction of a "playlist"
 		[_] check coordination process for ready audio
-		    and download from data process in standardized chunks
+		    and download from coordination or data process in standardized chunks
 			: within "safety" window to keep latency low and prevent broken
 			: output
+		[_] play playlist
+			[_] initialize and use csound object
+				[_] orchestra and score
+				[_] method for real time triggering of events
+				[_] method of loading up audio buffers downloaded
 	[_] coordination process
 		: requests to process audio, ands to N servers, and reports results
 		:
 		: in a reliable system this would be found via service discovery, and
 		: load balanced on multiple hosts
+		:
+		: for efficiency, audio could be shared with the audio process on
+		: one host via shm
 		[_] list of remotes
 		[_] forwarding messages to data processes with async loop
 		[_] serve up list of ready audio
