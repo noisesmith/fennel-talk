@@ -4,13 +4,12 @@
 (local thread (require :cqueues.thread))
 (local errno (require :cqueues.errno))
 
-(local
- read-specs
- {:eof "*a"
-  :line "*l"
-  :linen "*L"
-  :header "*h"
-  :headern "*H"})
+(local read-specs
+  {:eof "*a"
+   :line "*l"
+   :linen "*L"
+   :header "*h"
+   :headern "*H"})
 
 (fn spec
   [s]
