@@ -19,32 +19,35 @@ priorities
 		[X] use channels to make k variables
 		[X] use table methods to create / manipulate buffered data
 	[X] namespace that creates a small composition, based on the current csound test
-	[_] tcp communication / ipc via cqueues
-		[X] rewrite ipc.lua entirely
-		[X] test coverage for tcp code in ipc.lua
-			[X] server abstraction via cqueues, with test coverage
-			[X] thread sbstraction via cqueues, with test coverage
-			[X] non-socket coroutines in the cqueues wrapper for testing
-		[_] use message queues with the cqueues main loop
-			[_] design for queue assignment when adding a child process
-		[_] decent abstraction to use sockets via coroutines
-			[X] a driver for all the hops
-				: done with cqueues loop
-			[X] design decision
-				: a - integrate the IO polling with the event loop
-				: b - integrate the event loop with the IO polling
-			[X] integrate the event loop into the IO polling
-			[_] use the thread code to integration test the driver
-	[_] set up communication between I/O loops and main driver / each other
-		[X] simple queue
-		[_] pub/sub via unique client ids
-	[_] investigate using mqtt
-	[_] audio process reading blocks of sound from socket, playing them in series
-		[_] network audio I/O
-		[_] clip series DSL
-	[_] child process generating a block of audio to send to audio process
-	[_] audio process sending input data to children
-		[_] seeding clip series data for round trip(?)
+
+final conf tasks
+	[_] audio process
+		: sends requests to process audio; plays back results to hardware
+		:
+		: in a reliable system, this would have a second process ready in case
+		: of failover, connected to the same audio hardware
+		[_] messages that ask coordination process for audio
+		[_] construction of a "playlist"
+		[_] check coordination process for ready audio
+		    and download from data process in standardized chunks
+			: within "safety" window to keep latency low and prevent broken
+			: output
+	[_] coordination process
+		: requests to process audio, ands to N servers, and reports results
+		:
+		: in a reliable system this would be found via service discovery, and
+		: load balanced on multiple hosts
+		[_] list of remotes
+		[_] forwarding messages to data processes with async loop
+		[_] serve up list of ready audio
+	[_] data process
+		: takes in data, returns audio data with description
+		:
+		: in a reliable system this would use service discovery both coming in
+		: and sending back
+		[_] takes in data and a host
+		[_] stores _ for later usage
+		[_] sends info about new data to host
 
 deps used:
 	cqueues
@@ -80,3 +83,31 @@ contribute back to the community
 	[X] docs
 	[X] add doc for multiple value bind to the reference (currently as if it were a feature of let)
 	[_] the talk
+
+previous tasklist
+	[_] tcp communication / ipc via cqueues
+		[X] rewrite ipc.lua entirely
+		[X] test coverage for tcp code in ipc.lua
+			[X] server abstraction via cqueues, with test coverage
+			[X] thread sbstraction via cqueues, with test coverage
+			[X] non-socket coroutines in the cqueues wrapper for testing
+		[_] use message queues with the cqueues main loop
+			[_] design for queue assignment when adding a child process
+		[_] decent abstraction to use sockets via coroutines
+			[X] a driver for all the hops
+				: done with cqueues loop
+			[X] design decision
+				: a - integrate the IO polling with the event loop
+				: b - integrate the event loop with the IO polling
+			[X] integrate the event loop into the IO polling
+			[_] use the thread code to integration test the driver
+	[_] set up communication between I/O loops and main driver / each other
+		[X] simple queue
+		[_] pub/sub via unique client ids
+	[_] investigate using mqtt
+	[_] audio process reading blocks of sound from socket, playing them in series
+		[_] network audio I/O
+		[_] clip series DSL
+	[_] child process generating a block of audio to send to audio process
+	[_] audio process sending input data to children
+		[_] seeding clip series data for round trip(?)
