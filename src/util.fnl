@@ -60,6 +60,14 @@
             (set res (f res)))
       res)))
 
+(fn find-nonzero
+  [array size index]
+  (if (> index size)
+    nil
+    (not (zero? (. array index)))
+    index
+    (find-nonzero array size (+ index 1))))
+
 {:pks pks
  :boolean boolean
  :null? null?
@@ -67,4 +75,5 @@
  :str str
  :last last
  :butlast butlast
- :comp comp+}
+ :comp comp+
+ :find-nonzero find-nonzero}

@@ -1,4 +1,5 @@
 (require-macros :macros/util)
+(local util (require :util))
 (local lu (require :luaunit))
 (local csound (require :csound))
 
@@ -20,9 +21,11 @@
  endin
 ")
 
+(local table-size 32768)
+
 ;; creates a simple sco that runs for a given number of seconds
-(fn mk-sco [seconds]
-  (.. "f1 0 32768 10 1" "\n"
+(fn mk-sco [table-size seconds]
+  (.. "f1 0 " table-size " 10 1" "\n"
    "i1 0 " seconds " 10000"))
 
 (fn wobble
@@ -46,7 +49,7 @@
         _ (is (= res 0) "success from start")
         res (: cs :compile-orc orc)
         _ (is (= res 0) "success from compiling")
-        result (: cs :read-score (mk-sco duration))
+        result (: cs :read-score (mk-sco table-size duration))
         _ (is (= res 0) "success from reading the score")
         sr (: cs :get-sr)
         ksmps (: cs :get-ksmps)
