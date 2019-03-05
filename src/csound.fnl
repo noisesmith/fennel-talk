@@ -139,8 +139,8 @@
   (cs.csoundTableCopyIn self.cs table-id src))
 
 (method csound:table-copy-out
-  [table-id src]
-  (cs.csoundTableCopyOut self.cs table-id src))
+  [table-id dest]
+  (cs.csoundTableCopyOut self.cs table-id dest))
 
 (method csound:score-event
   [event-type ...]
@@ -151,5 +151,13 @@
     (for [i 1 field-count]
       (tset field-array (- i 1) (. fields i)))
     (cs.csoundScoreEventAsync self.cs ev-type field-array field-count)))
+
+(method csound:output-buffer-size
+   []
+   (cs.csoundGetOutputBufferSize self.cs))
+
+(method csound:output-buffer
+   []
+   (cs.csoundGetOutputBuffer self.cs))
 
 csound

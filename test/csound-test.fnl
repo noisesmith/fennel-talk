@@ -96,20 +96,70 @@
           "success from cleanup")
       result)))
 
-(fn all.test-event
-  [self]
+(fn generic-setup
+  [duration]
   (let [cs (csound.new 0)]
     (: cs :set-opts "-d" "--nchnls=2" "-m0")
     (: cs :start)
     (: cs :compile-orc orc)
-    (: cs :read-score (mk-sco 1000))
-    ;; this makes csound exit early
+    (: cs :read-score (mk-sco table-size duration))
+    cs))
+
+(fn generic-shutdown
+  [cs]
+  (: cs :cleanup)
+  (: cs :destroy))
+
+(fn all.test-event
+  [self]
+  ;; long running csound...
+  (let [cs (generic-setup 10000)]
+    ;; make csound exit early
     (is (= nil
            (: cs :score-event "e" 0)))
+    ;; one perfomance cycle, so the "e" event runs
     (: cs :perform-ksmps)
     (let [ret (: cs :perform-ksmps)]
       (is (= ret 2)
-          (.. "early exit, nonzero from performance cycle: " ret)))))
+          (.. "early exit, nonzero from performance cycle: " ret)))
+    (generic-shutdown cs)))
+
+(fn all.test-table-copy
+  [self]
+  ;; table copy out
+  (let [cs (generic-setup 10)
+        data (cs.doubles table-size)]
+    ;; init pass
+    (: cs :perform-ksmps)
+    (is (not (util.find-nonzero data (- table-size 1) 0))
+        "before copying the table, the array contents are all zeroes")
+    (is (= nil
+           (: cs :table-copy-out 1 data))
+        "can copy an ftable to an array without error")
+    (is (util.find-nonzero data (- table-size 1) 0)
+        "after copying the table, the contents of the array are nonzero")
+    (generic-shutdown cs))
+  ;; table copy in
+  (let [cs (generic-setup 10)
+        data (cs.doubles table-size)]
+    (is (not
+           (util.find-nonzero data (- table-size 1) 0))
+        "before copying the table, the array contents are all zeroes")
+    ;; init pass
+    (: cs :perform-ksmps)
+    (is (= nil
+           (: cs :table-copy-in 1 data))
+        "can copy an array to an ftable without error")
+    (is (do
+          (tset data 0 42)
+          (util.find-nonzero data (- table-size 1) 0))
+         "can put non-zero contents into the array by hand")
+    (is  (not
+            (do
+             (: cs :table-copy-out 1 data)
+             (util.find-nonzero data (- table-size 1) 0)))
+        "after copying the table to the array, the contents of the array are zero again")
+    (generic-shutdown cs)))
 
 ;; TODO - why is this broken? - in a fennel repl doing this causes a segfault
 ;; (fn all.test-bad-opt

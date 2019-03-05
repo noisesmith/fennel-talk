@@ -46,9 +46,13 @@
 
   void csoundTableCopyIn(void* csound, int table, double* src);
 
-  void csoundTableCopyOut(void* csound, int table, double* src);
+  void csoundTableCopyOut(void* csound, int table, double* dest);
 
   void csoundScoreEventAsync(void* csound, char type, double* pFields, long numFields);
+
+  long csoundGetOutputBufferSize(void* csound);
+
+  double* csoundGetOutputBuffer(void* csound);
 ')
 
 cs
