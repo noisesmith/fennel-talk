@@ -40,8 +40,11 @@ final conf tasks
 						[X] simple score to test the instrument
 					[X] score
 						[X] a series of tables that can be filled via api and used via ins above
-				[_] method for real time triggering of events
-				[_] method of loading up audio buffers downloaded
+				[X] real time triggering of events
+					[X] ffi for the csound event api
+					[X] ffi to create a double array from numbers
+					[X] call to create a new score event
+				[_] load up audio table from an array
 	[_] coordination process
 		: requests to process audio, ands to N servers, and reports results
 		:

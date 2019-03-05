@@ -77,11 +77,14 @@
           "success from performance cycle")
       (when (= 0 (% i 1000))
         (: cs :table-update 1 (fn [x] (wobble x 0.01)))))
+    (is (= nil
+           (: cs :score-event "e" 0)))
     (let [#messages (: cs :get-message-cnt)
           messages (: cs :messages)]
       (is (= #messages (# messages))
           "we get all the messages reported")
       (each [_ s (ipairs messages)]
+            ;; (print "MESSAGE:" s)
             (is (=  (type s) :string)
                 "each message is what we expect it is")))
     (let [result (: cs :cleanup)]
@@ -89,6 +92,21 @@
       (is (= result 0)
           "success from cleanup")
       result)))
+
+(fn all.test-event
+  [self]
+  (let [cs (csound.new 0)]
+    (: cs :set-opts "-d" "--nchnls=2" "-m0")
+    (: cs :start)
+    (: cs :compile-orc orc)
+    (: cs :read-score (mk-sco 1000))
+    ;; this makes csound exit early
+    (is (= nil
+           (: cs :score-event "e" 0)))
+    (: cs :perform-ksmps)
+    (let [ret (: cs :perform-ksmps)]
+      (is (= ret 2)
+          (.. "early exit, nonzero from performance cycle: " ret)))))
 
 ;; TODO - why is this broken? - in a fennel repl doing this causes a segfault
 ;; (fn all.test-bad-opt

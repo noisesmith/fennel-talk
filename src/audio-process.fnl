@@ -24,11 +24,17 @@
 (method audio-process:send-request
   [])
 
-(method audio-process:list-available [])
+(method audio-process:list-available
+  [])
 
-(method audio-process:get-result [])
+(method audio-process:fetch-result
+  [])
 
-(method audio-process:play-buffer [])
+(method audio-process:fill-table
+  [])
+
+(method audio-process:play-table
+  [])
 
 ;; send messages to coordination-process
 ;; poll for ready data, download

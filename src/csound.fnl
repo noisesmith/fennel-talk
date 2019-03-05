@@ -15,6 +15,10 @@
     (: self :set-opts "-d" "-m0")
     self))
 
+(local doubles (ffi.typeof "double[?]"))
+
+(tset csound :doubles doubles)
+
 (method csound:create
   []
   (set self.cs (cs.csoundCreate 0)))
@@ -137,5 +141,15 @@
 (method csound:table-copy-out
   [table-id src]
   (cs.csoundTableCopyOut self.cs table-id src))
+
+(method csound:score-event
+  [event-type ...]
+  (let [ev-type (string.byte event-type)
+        fields [...]
+        field-count (# fields)
+        field-array (doubles field-count)]
+    (for [i 1 field-count]
+      (tset field-array (- i 1) (. fields i)))
+    (cs.csoundScoreEventAsync self.cs ev-type field-array field-count)))
 
 csound
