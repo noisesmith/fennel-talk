@@ -8,10 +8,10 @@ gaphase = aphase*ksmps
 
   instr 2
 iins, istart, idur, ioffs, iamp, icurve, i_ passign
-itab = p7
+itable = p7
 kpos init ioffs*kr
 apos = kpos+gaphase
-asig tab apos, itab
+asig tab apos, itable
      kcurve linen iamp, icurve, idur, icurve
 aout = asig*ampdbfs(kcurve-96)*0dbfs
      outs aout, aout

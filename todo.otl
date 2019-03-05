@@ -45,6 +45,8 @@ final conf tasks
 					[X] ffi to create a double array from numbers
 					[X] call to create a new score event
 				[_] load up audio table from an array
+					[X] tests for the audio-process ns
+					[_] load up the orc and sco, fill table, make audio with non-zero output
 	[_] coordination process
 		: requests to process audio, ands to N servers, and reports results
 		:
