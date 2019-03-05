@@ -121,13 +121,21 @@
    (cs.csoundTableSet self.cs n index value))
 
 (method csound:table-update
-    [n f]
-    (let [size (: self :table-length n)]
-      (assert (not (= size -1))
-              (.. "table-update: table " n " not found"))
-      (for [i 0 (- size 1)]
-        (let [current (: self :table-get n i)
-              updated (f current)]
-          (: self :table-set n i updated)))))
+  [n f]
+  (let [size (: self :table-length n)]
+    (assert (not (= size -1))
+            (.. "table-update: table " n " not found"))
+    (for [i 0 (- size 1)]
+      (let [current (: self :table-get n i)
+            updated (f current)]
+        (: self :table-set n i updated)))))
+
+(method csound:table-copy-in
+  [table-id src]
+  (cs.csoundTableCopyIn self.cs table-id src))
+
+(method csound:table-copy-out
+  [table-id src]
+  (cs.csoundTableCopyOut self.cs table-id src))
 
 csound

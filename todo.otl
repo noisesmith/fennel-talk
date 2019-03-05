@@ -34,7 +34,12 @@ final conf tasks
 			: output
 		[_] play playlist
 			[_] initialize and use csound object
-				[_] orchestra and score
+				[X] orchestra and score
+					[X] orchestra
+						[X] instrument that plays from a table with optional delay, amp, fade, and offset
+						[X] simple score to test the instrument
+					[X] score
+						[X] a series of tables that can be filled via api and used via ins above
 				[_] method for real time triggering of events
 				[_] method of loading up audio buffers downloaded
 	[_] coordination process

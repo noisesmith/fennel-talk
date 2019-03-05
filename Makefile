@@ -10,6 +10,8 @@ composition.lua: csound.lua
 
 client-server.lua: ipc.lua util.lua sque.lua
 
+audio-process.lua: csound.lua client-server.lua
+
 test: util.lua csound-test util-test ipc-test client-server-test
 
 clean:

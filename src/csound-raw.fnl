@@ -43,6 +43,10 @@
   double csoundTableGet(void* csound, int table, int index);
 
   void csoundTableSet(void* csound, int table, int index, double value);
+
+  void csoundTableCopyIn(void* csound, int table, double* src);
+
+  void csoundTableCopyOut(void* csound, int table, double* src);
 ')
 
 cs

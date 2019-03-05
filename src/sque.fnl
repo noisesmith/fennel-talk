@@ -17,14 +17,12 @@
    (tset self :insert (+ idx 1))
    true))
 
-(method
- sq:peek
+(method sq:peek
  []
  (when self.entries
    (. self.entries self.consume)))
 
-(method
- sq:pop
+(method sq:pop
  []
  (let [payload (: self :peek)]
    (if (= payload nil)
