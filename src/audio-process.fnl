@@ -29,8 +29,9 @@
   (set self.table-size (math.pow 2 self.pow))
   (: self.cs :set-opts "-d" "--nchnls=2" "-m0")
   (: self.cs :start)
-  (: self.cs :compile-orc (: this :orchestra))
-  (: self.cs :read-score (: this :score)))
+  (: self.cs :compile-orc (: self :orchestra))
+  (: self.cs :read-score (: self :score))
+  self)
 
 (method audio-process:stop-engine
   []
