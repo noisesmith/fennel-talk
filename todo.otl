@@ -46,7 +46,11 @@ final conf tasks
 					[X] call to create a new score event
 				[_] load up audio table from an array
 					[X] tests for the audio-process ns
-					[_] load up the orc and sco, fill table, make audio with non-zero output
+					[X] load up the orc and sco
+					[X] fill table
+					[X] make audio
+					[_] audio with non-zero output
+						[X] simpler demo instrument, to ensure our method of detecting non-zero works
 	[_] coordination process
 		: requests to process audio, ands to N servers, and reports results
 		:

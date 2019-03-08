@@ -37,6 +37,33 @@
         value (* curved factor)]
     (+ n value)))
 
+(fn test-buffer
+  [cs]
+  (let [buf (: cs :output-buffer)
+        size (: cs :output-buffer-size)
+        found (util.find-nonzero buf (- size 1) 0)]
+    ;; (print "buffer of size" size "has non-zero at position" found)
+    (is found
+        "buffer needs to contain non-zero samples")))
+
+(fn test-perform
+  [cs iteration-count]
+  (var cpsl 440)
+  (var cpsr 440)
+  (for [i 0 iteration-count]
+    (set cpsl (wobble cpsl 10))
+    (set cpsr (wobble cpsr 10))
+    (: cs :set-control-channel :cps-left cpsl)
+    (: cs :set-control-channel :cps-right cpsr)
+    (is (= (: cs :perform-ksmps)
+           0)
+        "success from performance cycle")
+    (when (= 0 (% i 1000))
+      (: cs :table-update 1 (fn [x] (wobble x 0.01)))))
+  (test-buffer cs)
+  (is (= nil
+         (: cs :score-event "e" 0))))
+
 (fn all.test-synth
   [self]
   (let [duration 5
@@ -68,20 +95,7 @@
     (is (= sr 44100))
     (is (= ksmps (/ sr kr)))
     (is (= iteration-count (* duration kr)))
-    (var cpsl 440)
-    (var cpsr 440)
-    (for [i 0 iteration-count]
-      (set cpsl (wobble cpsl 10))
-      (set cpsr (wobble cpsr 10))
-      (: cs :set-control-channel :cps-left cpsl)
-      (: cs :set-control-channel :cps-right cpsr)
-      (is (= (: cs :perform-ksmps)
-             0)
-          "success from performance cycle")
-      (when (= 0 (% i 1000))
-        (: cs :table-update 1 (fn [x] (wobble x 0.01)))))
-    (is (= nil
-           (: cs :score-event "e" 0)))
+    (test-perform cs iteration-count)
     (let [#messages (: cs :get-message-cnt)
           messages (: cs :messages)]
       (is (= #messages (# messages))
