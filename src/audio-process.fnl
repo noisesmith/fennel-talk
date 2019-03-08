@@ -57,12 +57,12 @@
 (method audio-process:play-table
   [params]
   (: self.cs :score-event "i" 2
-     (or (. params :start) 0)
-     (. params :dur)
-     (or (. params :offs) 0)
-     (or (. params :amp) 1)
-     (or (. params :curve) 0)
-     (or (. params :table))))
+     (or params.start 0)
+     params.dur
+     (or params.offs 0)
+     (or params.amp 0)
+     (or params.curve 0.01)
+     params.table))
 
 ;; send messages to coordination-process
 ;; poll for ready data, download
