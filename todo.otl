@@ -33,7 +33,7 @@ final conf tasks
 			: within "safety" window to keep latency low and prevent broken
 			: output
 		[_] play playlist
-			[_] initialize and use csound object
+			[X] initialize and use csound object
 				[X] orchestra and score
 					[X] orchestra
 						[X] instrument that plays from a table with optional delay, amp, fade, and offset
@@ -44,13 +44,16 @@ final conf tasks
 					[X] ffi for the csound event api
 					[X] ffi to create a double array from numbers
 					[X] call to create a new score event
-				[_] load up audio table from an array
+				[X] load up audio table from an array
 					[X] tests for the audio-process ns
 					[X] load up the orc and sco
 					[X] fill table
 					[X] make audio
-					[_] audio with non-zero output
+					[X] audio with non-zero output
 						[X] simpler demo instrument, to ensure our method of detecting non-zero works
+						[X] ensure that non-zero data is in the table used
+						[X] fix the test
+			[_] start up items in sequence
 	[_] coordination process
 		: requests to process audio, ands to N servers, and reports results
 		:

@@ -117,8 +117,8 @@
   (cs.csoundTableLength self.cs n))
 
 (method csound:table-get
-   [n index]
-   (cs.csoundTableGet self.cs n index))
+   [table-id index]
+   (cs.csoundTableGet self.cs table-id index))
 
 (method csound:table-set
    [n index value]

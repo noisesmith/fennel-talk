@@ -63,9 +63,9 @@
         "must find non-zero contents in the table")
     (play-table-1 ctx.ap)
     ;; TODO - this should pass, the instrument or score statement is broken
-    (comment
+    (: ctx.ap.cs :perform-ksmps)
     (is (find-nonzero-in-out ctx.ap)
-        "with table contents, there should be a nonzero output"))))
+        "with table contents, there should be a nonzero output")))
 
 (local runner (lu.LuaUnit.new))
 (: runner :setOutputType :tap)

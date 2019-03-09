@@ -56,12 +56,16 @@
 
 (method audio-process:play-table
   [params]
+  (assert params.dur
+          "cannot play a table with no duration")
+  (assert params.table
+          "cannot play without a table id")
   (: self.cs :score-event "i" 2
      (or params.start 0)
      params.dur
      (or params.offs 0)
-     (or params.amp 0)
-     (or params.curve 0.01)
+     (or params.amp 1)
+     (or params.curve 0.1)
      params.table))
 
 ;; send messages to coordination-process
